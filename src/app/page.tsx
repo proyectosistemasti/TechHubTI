@@ -1,17 +1,17 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { SignedIn, SignedOut, SignInButton, SignOutButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, SignOutButton, useOrganization } from "@clerk/nextjs";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { getFiles } from '../../convex/files';
 
 export default function Home() {
+  const {organization} = useOrganization();
   const files = useQuery(api.files.getFiles)
   const createFile = useMutation(api.files.createFile);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex flex-col items-center justify-between min-h-screen p-24">
       <SignedIn>
         <SignOutButton>
           <Button>Sign Out</Button>
