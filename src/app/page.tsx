@@ -2,10 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import { SignedIn, SignedOut, SignInButton, SignOutButton } from "@clerk/nextjs";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { getFiles } from '../../convex/files';
 
 export default function Home() {
+  const files = useQuery(api.files.getFiles)
   const createFile = useMutation(api.files.createFile);
 
   return (
@@ -20,6 +22,10 @@ export default function Home() {
           <Button>Sign In</Button>
         </SignInButton>
       </SignedOut>
+
+      {files?.map((file) => {
+        return <div key={file._id}>{file.name}</div>
+      })}
 
       <Button
         onClick={() => {
