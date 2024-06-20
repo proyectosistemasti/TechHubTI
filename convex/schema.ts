@@ -6,5 +6,8 @@ export default defineSchema({
     "by_orgId",
     ["orgId"]
   ),
-  users: defineTable({ name: v.string(), orgId: v.string})
+  users: defineTable({
+    tokenIdentifier: v.string(),
+    clerkId: v.string()
+  })
 });
