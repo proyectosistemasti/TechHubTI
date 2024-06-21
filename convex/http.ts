@@ -25,7 +25,7 @@ http.route({
       switch (result.type) {
         case "user.created":
           await ctx.runMutation(internal.users.createUser, {
-
+            tokenIdentifier: `${result.data.id}`
             // tokenIdentifier: `https://${process.env.CLERK_HOSTNAME}|${result.data.id}`,
             // name: `${result.data.first_name ?? ""} ${
             //   result.data.last_name ?? ""
