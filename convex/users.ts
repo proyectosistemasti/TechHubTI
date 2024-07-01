@@ -1,4 +1,4 @@
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { internalMutation } from "./_generated/server";
 
 export const createUser = internalMutation({
@@ -18,10 +18,15 @@ export const addOrgToUser = internalMutation({
       .query("users")
       .withIndex("by_tokenIdentifier", (q) =>
         q.eq("tokenIdentifier", args.tokenIdentifier)
-      );
+      ).first();
+
+      if (!user) {
+        throw new ConvexError("Expected user to be defined");
+      }
+
     await ctx.db.insert("users", {
       tokenIdentifier: args.tokenIdentifier,
-      orgIds: [],
+      orgIds: [...user.orgIds, args.orgId],
     });
   },
 });
