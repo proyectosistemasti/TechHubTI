@@ -3,7 +3,6 @@ import { mutation, MutationCtx, query, QueryCtx } from "./_generated/server";
 import { getUser } from "./users";
 
 export const generateUploadUrl = mutation(async (ctx) => {
-
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {
     throw new ConvexError("You no have access to this Org");
@@ -18,6 +17,9 @@ async function hasAccessToOrg(
   orgId: string
 ) {
   const user = await getUser(ctx, tokenIdentifier);
+  if (!user) {
+    throw new ConvexError("Expected user to be defined");
+  }
 
   const hasAccess =
     user.orgIds.includes(orgId) || user.tokenIdentifier.includes(orgId);
@@ -32,6 +34,11 @@ export const createFile = mutation({
     orgId: v.string(),
   },
   async handler(ctx, args) {
+    // Generar un error a propósito para depuración
+    throw new Error("Intentional error: You have no access");
+
+    // Código original comentado para asegurarse de que el error se genera
+    /*
     const identity = await ctx.auth.getUserIdentity();
 
     if (!identity) {
@@ -53,6 +60,7 @@ export const createFile = mutation({
       orgId: args.orgId,
       fileId: args.fileId,
     });
+    */
   },
 });
 
@@ -71,7 +79,7 @@ export const getFiles = query({
       identity.tokenIdentifier,
       args.orgId
     );
- 
+
     if (!hasAccess) {
       return [];
     }

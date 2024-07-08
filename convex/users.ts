@@ -1,24 +1,27 @@
 import { ConvexError, v } from "convex/values";
-import { internalMutation, MutationCtx, QueryCtx } from "./_generated/server";
+import {
+  MutationCtx,
+  QueryCtx,
+  internalMutation,
+  query,
+} from "./_generated/server";
 
 export async function getUser(
   ctx: QueryCtx | MutationCtx,
-  tokenIdentifier: string) {
-
-  const user =  await ctx.db
+  tokenIdentifier: string
+) {
+  const user = await ctx.db
     .query("users")
     .withIndex("by_tokenIdentifier", (q) =>
       q.eq("tokenIdentifier", tokenIdentifier)
     )
     .first();
 
+  if (!user) {
+    throw new ConvexError("expected user to be defined");
+  }
 
-    if(!user) {
-      throw new ConvexError("Expected user to be defined")
-    }
-
-    return user;
-
+  return user;
 }
 
 export const createUser = internalMutation({
@@ -31,20 +34,23 @@ export const createUser = internalMutation({
   },
 });
 
-export const addOrgIdToUser = internalMutation({
+export const addOrgToUser = internalMutation({
   args: { tokenIdentifier: v.string(), orgId: v.string() },
   async handler(ctx, args) {
-    const user = await getUser(ctx, args.tokenIdentifier)
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_tokenIdentifier", (q) =>
+        q.eq("tokenIdentifier", args.tokenIdentifier)
+      )
+      .first();
 
+    if (!user) {
+      throw new ConvexError("Expected user to be defined");
+    }
 
-    await ctx.db.patch(user._id, {
+    await ctx.db.insert("users", {
+      tokenIdentifier: args.tokenIdentifier,
       orgIds: [...user.orgIds, args.orgId],
     });
-
-    //! Hay que revisar minuto 1:00:25
-    // await ctx.db.insert("users", {
-    //   tokenIdentifier: args.tokenIdentifier,
-    //   orgIds: [...user.orgIds, args.orgId],
-    // });
   },
 });

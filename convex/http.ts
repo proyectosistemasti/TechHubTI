@@ -29,7 +29,7 @@ http.route({
           });
           break;
         case "organizationMembership.created":
-          await ctx.runMutation(internal.users.addOrgIdToUser, {
+          await ctx.runMutation(internal.users.addOrgToUser, {
             tokenIdentifier: `https://stirring-bass-93.clerk.accounts.dev|${result.data.public_user_data.user_id}`,
             orgId: result.data.organization.id,
           });
