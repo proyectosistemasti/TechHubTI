@@ -35,10 +35,10 @@ export const createFile = mutation({
   },
   async handler(ctx, args) {
     // Generar un error a propósito para depuración
-    throw new Error("Intentional error: You have no access");
+    // throw new Error("Intentional error: You have no access");
 
     // Código original comentado para asegurarse de que el error se genera
-    /*
+    
     const identity = await ctx.auth.getUserIdentity();
 
     if (!identity) {
@@ -60,7 +60,7 @@ export const createFile = mutation({
       orgId: args.orgId,
       fileId: args.fileId,
     });
-    */
+
   },
 });
 
