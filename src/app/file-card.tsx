@@ -96,7 +96,7 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
         </div>
       </CardHeader>
       <CardContent>
-        <p>Card Content</p>
+        <p>{file.type}</p>
       </CardContent>
       <CardFooter>
         <Button>Download</Button>
