@@ -76,6 +76,8 @@ export function UploadButton() {
 
       const types = {
         "image/png": "image",
+        "image/jpg": "image",
+        "image/jpeg": "image",
         "application/pdf": "pdf",
         "text/csv": "csv",
         "application/msword": "doc",
