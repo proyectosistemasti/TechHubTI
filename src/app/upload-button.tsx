@@ -20,6 +20,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
+import { Doc } from "../../convex/_generated/dataModel";
 
 const formSchema = z.object({
   title: z.string().min(1).max(200),
@@ -47,8 +48,8 @@ export function UploadButton() {
   const [isLoading, setIsLoading] = useState(false); // Estado de carga
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    console.log(values.file);
+    // console.log(values);
+    // console.log(values.file);
 
     let orgId: string | undefined = undefined;
     if (organization.isLoaded && user.isLoaded) {
@@ -62,36 +63,57 @@ export function UploadButton() {
     try {
       const postUrl = await generateUploadUrl();
 
+      const file = values.file[0];
+      const fileType = file.type;
+
       const result = await fetch(postUrl, {
         method: "POST",
-        headers: { "Content-Type": values.file[0].type },
-        body: values.file[0],
+        headers: { "Content-Type": fileType },
+        body: file,
       });
 
       const { storageId } = await result.json();
 
-      await createFile({
-        name: values.title,
-        fileId: storageId,
-        orgId,
-      });
+      const types = {
+        "image/png": "image",
+        "application/pdf": "pdf",
+        "text/csv": "csv",
+      } as Record<string, Doc<"files">["type"]>;
 
-      form.reset();
-      setIsFileDialogOpen(false);
+      const fileTypeKey = types[fileType];
 
-      toast({
-        variant: "success",
-        title: "File Updated",
-        description: "Now everyone can view your file",
-      });
+      try {
+        await createFile({
+          name: values.title,
+          fileId: storageId,
+          orgId,
+          type: fileTypeKey
+        });
+
+        form.reset();
+        setIsFileDialogOpen(false);
+
+        toast({
+          variant: "success",
+          title: "File Uploaded",
+          description: "Now everyone can view your file",
+        });
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Something went wrong",
+          description: "Your file could not be uploaded, try again later"
+        });
+      } finally {
+        setIsLoading(false); // Desactivar estado de carga
+      }
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Something went wrong",
-        description: "Your file could not be updated, try again later"
+        description: "An error occurred while uploading, try again later"
       });
-    } finally {
-      setIsLoading(false); // Desactivar estado de carga
+      setIsLoading(false); // Desactivar estado de carga en caso de error
     }
   }
 
@@ -109,7 +131,7 @@ export function UploadButton() {
         <DialogHeader>
           <DialogTitle className="mb-8">Upload your File Here</DialogTitle>
           <DialogDescription>
-            This File will be accessible by anyone in your organization
+            This file will be accessible by anyone in your organization
           </DialogDescription>
         </DialogHeader>
 
@@ -144,12 +166,12 @@ export function UploadButton() {
             />
 
             <Button
-            type="submit"
-            disabled={form.formState.isSubmitting}
-            className="flex gap-1"
+              type="submit"
+              disabled={form.formState.isSubmitting}
+              className="flex gap-1"
             >
               {form.formState.isSubmitting && (
-                <Loader2 className="h-4 w-4 animate-spin"/>
+                <Loader2 className="h-4 w-4 animate-spin" />
               )}
               Submit
             </Button>
