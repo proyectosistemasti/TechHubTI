@@ -118,7 +118,7 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
           <FileCardActions file={file} />
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="h-[200px]">
         {
           file.type === "image" &&(
             <Image
