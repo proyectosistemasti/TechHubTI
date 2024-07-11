@@ -32,7 +32,7 @@ export default function Home() {
       </div>
     )}
 
-      {!isLoading && files.length === 0 &&
+      {!isLoading && !query && files.length === 0 &&
         <div className="flex flex-col items-center w-full gap-8 mt-12">
           <Image
             alt="an image of a directory icon"
@@ -48,13 +48,28 @@ export default function Home() {
       }
 
 
-      {!isLoading && files.length > 0 && (
+      {!isLoading && (
         <>
           <div className="flex items-center justify-between mb-8">
             <h1 className="text-4xl font-bold">Your Files</h1>
             <SearchBar query={query} setQuery={setQuery}/>
             <UploadButton />
           </div>
+
+          {files.length === 0 &&
+        <div className="flex flex-col items-center w-full gap-8 mt-12">
+          <Image
+            alt="an image of a directory icon"
+            width={300}
+            height={300}
+            src="/empty.svg"
+          />
+          <div className="text-2xl">
+            You have no files, upload one now
+          </div>
+          <UploadButton />
+        </div>
+      }
 
           <div className="grid grid-cols-4 gap-4">
             {files?.map((file) => (
