@@ -12,12 +12,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Loader2, SearchIcon } from "lucide-react";
+import { Dispatch, SetStateAction } from "react";
 
 const formSchema = z.object({
   query: z.string().min(0).max(200)
 });
 
-export function SearchBar() {
+export function SearchBar({query, setQuery}: {query: string, setQuery: Dispatch<SetStateAction<string>>}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,7 +28,8 @@ export function SearchBar() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // Aquí puedes agregar la lógica de búsqueda
-    console.log(values);
+    setQuery(values.query)
+    // console.log(values);/
   }
 
   return (

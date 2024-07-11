@@ -7,17 +7,19 @@ import { FileCard } from "./file-card";
 import Image from "next/image";
 import { Loader2 } from "lucide-react";
 import { SearchBar } from "./search-bar";
+import { useState } from "react";
 
 export default function Home() {
   const organization = useOrganization();
   const user = useUser();
+  const [query, setQuery] = useState("");
 
   let orgId: string | undefined = undefined;
   if (organization.isLoaded && user.isLoaded) {
     orgId = organization.organization?.id ?? user.user?.id;
   }
 
-  const files = useQuery(api.files.getFiles, orgId ? { orgId } : 'skip');
+  const files = useQuery(api.files.getFiles, orgId ? { orgId, query } : 'skip');
   const isLoading = files === undefined;
 
   return (
@@ -50,7 +52,7 @@ export default function Home() {
         <>
           <div className="flex items-center justify-between mb-8">
             <h1 className="text-4xl font-bold">Your Files</h1>
-            <SearchBar/>
+            <SearchBar query={query} setQuery={setQuery}/>
             <UploadButton />
           </div>
 
