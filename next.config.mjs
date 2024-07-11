@@ -2,7 +2,6 @@
 const nextConfig = {
   images: {
     remotePatterns : [
-
       {
         hostname: 'brave-loris-875.convex.cloud'
       }

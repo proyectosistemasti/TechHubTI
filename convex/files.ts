@@ -33,7 +33,7 @@ export const createFile = mutation({
     name: v.string(),
     fileId: v.id("_storage"),
     orgId: v.string(),
-    type: fileTypes
+    type: fileTypes,
   },
   async handler(ctx, args) {
     // throw new Error("Intentional error: You have no access");
@@ -60,7 +60,6 @@ export const createFile = mutation({
       fileId: args.fileId,
       type: args.type,
     });
-
   },
 });
 
@@ -69,7 +68,6 @@ export const getFiles = query({
     orgId: v.string(),
   },
   async handler(ctx, args) {
-
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       return [];
@@ -92,12 +90,9 @@ export const getFiles = query({
   },
 });
 
-
-
 export const deleteFile = mutation({
-  args: {fileId: v.id("files")},
+  args: { fileId: v.id("files") },
   async handler(ctx, args) {
-
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new ConvexError("You no have access to this Org");
@@ -105,7 +100,7 @@ export const deleteFile = mutation({
 
     const file = await ctx.db.get(args.fileId);
 
-    if(!file) {
+    if (!file) {
       throw new ConvexError("This file does not exist");
     }
 
@@ -120,5 +115,15 @@ export const deleteFile = mutation({
     }
 
     await ctx.db.delete(args.fileId);
-  }
-})
+  },
+});
+
+export const getFileUrl = query({
+  args: {
+    fileId: v.id("_storage"),
+  },
+  async handler(ctx, args) {
+    const url = await ctx.storage.getUrl(args.fileId);
+    return url;
+  },
+});

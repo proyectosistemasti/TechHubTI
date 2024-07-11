@@ -18,7 +18,6 @@ import {
   MoreVertical,
   TrashIcon,
   FileTextIcon,
-  GanttChartIcon,
   FileIcon,
   NotepadTextIcon,
   FileBarChart2,
@@ -33,8 +32,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ReactNode, useState } from "react";
-import { useMutation } from "convex/react";
+import { ReactNode, useEffect, useState } from "react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
@@ -93,13 +92,16 @@ export function FileCardActions({ file }: { file: Doc<"files"> }) {
   );
 }
 
-  function getFileUrl(fileId: Id<"_storage">): string {
-    return `${process.env.NEXT_PUBLIC_CONVEX_URL}/api/files/${fileId}`;
-    // https://brave-loris-875.convex.cloud/api/storage/64ee2d8b-40b5-47e1-83cc-ee31a071fac9
-  }
-
-
 export function FileCard({ file }: { file: Doc<"files"> }) {
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
+  const url = useQuery(api.files.getFileUrl, { fileId: file.fileId });
+
+  useEffect(() => {
+    if (url) {
+      setFileUrl(url);
+    }
+  }, [url]);
+
   const typeIcons: Record<string, ReactNode> = {
     image: <ImageIcon />,
     pdf: <FileIcon />,
@@ -111,24 +113,26 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
   return (
     <Card>
       <CardHeader className="relative">
-        <CardTitle className="flex gap-2">
+        <CardTitle className="flex gap-2 items-center">
           <div className="flex justify-center">{typeIcons[file.type]}</div>
-          {file.name}</CardTitle>
+          {file.name}
+        </CardTitle>
         <div className="absolute top-2 right-2">
           <FileCardActions file={file} />
         </div>
       </CardHeader>
-      <CardContent className="h-[200px]">
-        {
-          file.type === "image" &&(
-            <Image
+      <CardContent className="h-[200px] flex items-center justify-center overflow-hidden">
+        {file.type === "image" && fileUrl && (
+          <Image
             alt={file.name}
+            src={fileUrl}
             width={200}
-            height={100}
-            src={getFileUrl(file.fileId)}/>
-          )}
+            height={200}
+            className="object-cover w-full h-full"
+          />
+        )}
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex justify-center">
         <Button>Download</Button>
       </CardFooter>
     </Card>
