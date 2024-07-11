@@ -38,10 +38,12 @@ import { api } from "../../convex/_generated/api";
 import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
 
+// Componente para manejar las acciones del archivo
 export function FileCardActions({ file }: { file: Doc<"files"> }) {
+  // Mutación para eliminar el archivo
   const deleteFile = useMutation(api.files.deleteFile);
-  const { toast } = useToast();
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const { toast } = useToast(); // Hook para mostrar notificaciones
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false); // Estado para el diálogo de confirmación
 
   return (
     <>
@@ -59,7 +61,7 @@ export function FileCardActions({ file }: { file: Doc<"files"> }) {
             <AlertDialogAction
               onClick={async () => {
                 await deleteFile({
-                  fileId: file._id,
+                  fileId: file._id, // Eliminar el archivo usando su ID
                 });
                 toast({
                   variant: "default",
@@ -80,7 +82,7 @@ export function FileCardActions({ file }: { file: Doc<"files"> }) {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem
-            onClick={() => setIsConfirmOpen(true)}
+            onClick={() => setIsConfirmOpen(true)} // Abrir el diálogo de confirmación
             className="flex gap-1 text-red-500 items-center cursor-pointer"
           >
             <TrashIcon className="w-5 h-5" />
@@ -92,16 +94,18 @@ export function FileCardActions({ file }: { file: Doc<"files"> }) {
   );
 }
 
+// Componente para mostrar la tarjeta del archivo
 export function FileCard({ file }: { file: Doc<"files"> }) {
-  const [fileUrl, setFileUrl] = useState<string | null>(null);
-  const url = useQuery(api.files.getFileUrl, { fileId: file.fileId });
+  const [fileUrl, setFileUrl] = useState<string | null>(null); // Estado para la URL del archivo
+  const url = useQuery(api.files.getFileUrl, { fileId: file.fileId }); // Consulta para obtener la URL del archivo
 
   useEffect(() => {
     if (url) {
-      setFileUrl(url);
+      setFileUrl(url); // Actualizar el estado de la URL del archivo
     }
   }, [url]);
 
+  // Iconos para diferentes tipos de archivos
   const typeIcons: Record<string, ReactNode> = {
     image: <ImageIcon />,
     pdf: <FileIcon />,
@@ -118,14 +122,14 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
           {file.name}
         </CardTitle>
         <div className="absolute top-2 right-2">
-          <FileCardActions file={file} />
+          <FileCardActions file={file} /> {/* Acciones de la tarjeta */}
         </div>
       </CardHeader>
       <CardContent className="h-[200px] flex items-center justify-center overflow-hidden">
         {file.type === "image" && fileUrl && (
           <Image
             alt={file.name}
-            src={fileUrl}
+            src={fileUrl} // Mostrar la imagen usando la URL
             width={200}
             height={200}
             className="object-cover w-full h-full"
@@ -136,7 +140,7 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
         <Button
           onClick={() => {
             if (fileUrl) {
-              window.open(fileUrl, "_blank");
+              window.open(fileUrl, "_blank"); // Abrir el archivo en una nueva pestaña
             }
           }}
         >
