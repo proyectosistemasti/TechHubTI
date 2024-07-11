@@ -133,7 +133,15 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
         )}
       </CardContent>
       <CardFooter className="flex justify-center">
-        <Button>Download</Button>
+        <Button
+          onClick={() => {
+            if (fileUrl) {
+              window.open(fileUrl, "_blank");
+            }
+          }}
+        >
+          Download
+        </Button>
       </CardFooter>
     </Card>
   );
