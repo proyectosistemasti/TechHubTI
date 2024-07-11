@@ -48,12 +48,11 @@ export default function Home() {
 
       {!isLoading && files.length > 0 && (
         <>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-8">
             <h1 className="text-4xl font-bold">Your Files</h1>
+            <SearchBar/>
             <UploadButton />
           </div>
-
-          <SearchBar/>
 
           <div className="grid grid-cols-4 gap-4">
             {files?.map((file) => (

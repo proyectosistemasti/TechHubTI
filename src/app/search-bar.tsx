@@ -14,7 +14,7 @@ import { z } from "zod";
 import { Loader2, SearchIcon } from "lucide-react";
 
 const formSchema = z.object({
-  query: z.string().min(1).max(200)
+  query: z.string().min(0).max(200)
 });
 
 export function SearchBar() {
@@ -33,15 +33,14 @@ export function SearchBar() {
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-2 items-center">
           <FormField
             control={form.control}
             name="query"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Search</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="Your file name"/>
                 </FormControl>
                 <FormMessage />
               </FormItem>

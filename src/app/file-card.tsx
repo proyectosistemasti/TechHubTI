@@ -126,7 +126,7 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
         </div>
       </CardHeader>
       <CardContent className="h-[200px] flex items-center justify-center overflow-hidden">
-        {file.type === "image" && fileUrl && (
+        {file.type === "image" && fileUrl ? (
           <Image
             alt={file.name}
             src={fileUrl} // Mostrar la imagen usando la URL
@@ -134,6 +134,11 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
             height={200}
             className="object-cover w-full h-full"
           />
+        ) : (
+          <div className="flex flex-col items-center justify-center">
+            {typeIcons[file.type]}
+            {/* <div>{file.name}</div> */}
+          </div>
         )}
       </CardContent>
       <CardFooter className="flex justify-center">
