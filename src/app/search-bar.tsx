@@ -12,37 +12,49 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Loader2, SearchIcon } from "lucide-react";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 
 const formSchema = z.object({
-  query: z.string().min(0).max(200)
+  query: z.string().min(0).max(200),
 });
 
-export function SearchBar({query, setQuery}: {query: string, setQuery: Dispatch<SetStateAction<string>>}) {
+export function SearchBar({
+  query,
+  setQuery,
+}: {
+  query: string;
+  setQuery: Dispatch<SetStateAction<string>>;
+}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      query: "",
+      query: query, // Establecer el valor por defecto desde el estado del componente padre
     },
   });
 
+  useEffect(() => {
+    form.reset({ query }); // Resetea el formulario cuando `query` cambia
+  }, [query, form]);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // Aquí puedes agregar la lógica de búsqueda
-    setQuery(values.query)
-    // console.log(values);/
+    setQuery(values.query);
   }
 
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-2 items-center">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex gap-2 items-center"
+        >
           <FormField
             control={form.control}
             name="query"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input {...field} placeholder="Your file name"/>
+                  <Input {...field} placeholder="Your file name" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

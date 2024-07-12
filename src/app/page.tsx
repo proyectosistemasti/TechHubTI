@@ -9,6 +9,23 @@ import { Loader2 } from "lucide-react";
 import { SearchBar } from "./search-bar";
 import { useState } from "react";
 
+function PlaceHolder() {
+  return (
+    <div className="flex flex-col items-center w-full gap-8 mt-12">
+          <Image
+            alt="an image of a directory icon"
+            width={300}
+            height={300}
+            src="/empty.svg"
+          />
+          <div className="text-2xl">
+            You have no files, upload one now
+          </div>
+          <UploadButton />
+        </div>
+  )
+}
+
 export default function Home() {
   const organization = useOrganization();
   const user = useUser();
@@ -32,22 +49,6 @@ export default function Home() {
       </div>
     )}
 
-      {!isLoading && !query && files.length === 0 &&
-        <div className="flex flex-col items-center w-full gap-8 mt-12">
-          <Image
-            alt="an image of a directory icon"
-            width={300}
-            height={300}
-            src="/empty.svg"
-          />
-          <div className="text-2xl">
-            You have no files, upload one now
-          </div>
-          <UploadButton />
-        </div>
-      }
-
-
       {!isLoading && (
         <>
           <div className="flex items-center justify-between mb-8">
@@ -56,20 +57,7 @@ export default function Home() {
             <UploadButton />
           </div>
 
-          {files.length === 0 &&
-        <div className="flex flex-col items-center w-full gap-8 mt-12">
-          <Image
-            alt="an image of a directory icon"
-            width={300}
-            height={300}
-            src="/empty.svg"
-          />
-          <div className="text-2xl">
-            You have no files, upload one now
-          </div>
-          <UploadButton />
-        </div>
-      }
+          {files.length === 0 && <PlaceHolder/> }
 
           <div className="grid grid-cols-4 gap-4">
             {files?.map((file) => (
