@@ -1,9 +1,11 @@
 'use client';
 
+import { FileBrowser } from "../_components/file-browser";
+
   export default function favoritesPage() {
     return (
       <div>
-        <h1 className="text-4xl font-bold">Your Files</h1>
+        <FileBrowser title="Your Files"/>
       </div>
     )
   }

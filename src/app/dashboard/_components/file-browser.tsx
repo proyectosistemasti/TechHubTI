@@ -29,7 +29,7 @@ function PlaceHolder() {
   )
 }
 
-export default function FilesPage() {
+export function FileBrowser({title}: {title: string}) {
   const organization = useOrganization();
   const user = useUser();
   const [query, setQuery] = useState("");
@@ -54,7 +54,7 @@ export default function FilesPage() {
       {!isLoading && (
         <>
           <div className="flex items-center justify-between mb-8">
-            <h1 className="text-4xl font-bold">Your Files</h1>
+            <h1 className="text-4xl font-bold">{title}</h1>
             <SearchBar query={query} setQuery={setQuery} />
             <UploadButton />
           </div>
