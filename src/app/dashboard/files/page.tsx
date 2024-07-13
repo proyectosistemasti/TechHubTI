@@ -3,10 +3,12 @@
 import { api } from "../../../../convex/_generated/api";
 import { useOrganization, useUser } from "@clerk/clerk-react";
 import { useQuery } from "convex/react";
-import { UploadButton } from "@/app/upload-button";
+// import { UploadButton } from "@/app/upload-button";
+import { UploadButton } from "./upload-button";
 import { FileCard } from "@/app/dashboard/files/file-card";
 import Image from "next/image";
-import { SearchBar } from "@/app/search-bar";
+// import { SearchBar } from "@/app/search-bar";
+import { SearchBar } from "./search-bar";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 
