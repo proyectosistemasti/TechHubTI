@@ -120,29 +120,36 @@ export const getFiles = query({
 export const deleteFile = mutation({
   args: { fileId: v.id("files") },
   async handler(ctx, args) {
+    const access = await hasAccessToFile(ctx, args.fileId);
+
+    if(!access) {
+      throw new ConvexError("No access to file")
+    }
+
+
     // Obtener la identidad del usuario
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("You no have access to this Org");
-    }
+    // const identity = await ctx.auth.getUserIdentity();
+    // if (!identity) {
+    //   throw new ConvexError("You no have access to this Org");
+    // }
 
-    // Obtener el archivo a eliminar
-    const file = await ctx.db.get(args.fileId);
+    // // Obtener el archivo a eliminar
+    // const file = await ctx.db.get(args.fileId);
 
-    if (!file) {
-      throw new ConvexError("This file does not exist");
-    }
+    // if (!file) {
+    //   throw new ConvexError("This file does not exist");
+    // }
 
-    // Verificar si el usuario tiene acceso a la organización del archivo
-    const hasAccess = await hasAccessToOrg(
-      ctx,
-      identity.tokenIdentifier,
-      file.orgId
-    );
+    // // Verificar si el usuario tiene acceso a la organización del archivo
+    // const hasAccess = await hasAccessToOrg(
+    //   ctx,
+    //   identity.tokenIdentifier,
+    //   file.orgId
+    // );
 
-    if (!hasAccess) {
-      throw new ConvexError("You do not have access to delete this file");
-    }
+    // if (!hasAccess) {
+    //   throw new ConvexError("You do not have access to delete this file");
+    // }
 
     // Eliminar el archivo
     await ctx.db.delete(args.fileId);
@@ -173,15 +180,15 @@ export const toggleFavorite = mutation({
     const favorite = await ctx.db
       .query("favorites")
       .withIndex("by_userId_orgId_fileId", (q) =>
-        q.eq("userId", user._id).eq("orgId", file.orgId).eq("fileId", file._id)
+        q.eq("userId", access.user._id).eq("orgId", access.file.orgId).eq("fileId", access.file._id)
       )
       .first();
 
     if (!favorite) {
       await ctx.db.insert("favorites", {
-        fileId: file._id,
-        userId: user._id,
-        orgId: file.orgId,
+        fileId: access.file._id,
+        userId: access.user._id,
+        orgId: access.file.orgId,
       });
       return "Added to favorites";
     } else {

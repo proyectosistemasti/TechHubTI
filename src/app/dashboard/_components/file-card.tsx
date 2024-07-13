@@ -44,6 +44,7 @@ import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 export function FileCardActions({ file }: { file: Doc<"files"> }) {
   // Mutación para eliminar el archivo
   const deleteFile = useMutation(api.files.deleteFile);
+  const toggleFavorite = useMutation(api.files.toggleFavorite);
   const { toast } = useToast(); // Hook para mostrar notificaciones
   const [isConfirmOpen, setIsConfirmOpen] = useState(false); // Estado para el diálogo de confirmación
 
@@ -84,7 +85,13 @@ export function FileCardActions({ file }: { file: Doc<"files"> }) {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem
-            onClick={() => setIsConfirmOpen(true)} // Abrir el diálogo de confirmación
+            onClick={() =>
+              {
+                toggleFavorite({
+                  fileId: file._id
+                })
+              }
+            } // Abrir el diálogo de confirmación
             className="flex gap-1 text-yellow-500 items-center cursor-pointer"
           >
             <StarIcon className="w-5 h-5" />
