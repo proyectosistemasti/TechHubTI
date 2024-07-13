@@ -2,12 +2,12 @@
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { UploadButton } from "./dashboard/files/upload-button";
-import { FileCard } from "./dashboard/files/file-card";
+import { UploadButton } from "./dashboard/_components/upload-button";
+import { FileCard } from "./dashboard/_components/file-card";
 import Image from "next/image";
 import { FileIcon, Loader2, StarIcon, TrashIcon } from "lucide-react";
 // import { SearchBar } from "./search-bar";
-import { SearchBar } from "./dashboard/files/search-bar";
+import { SearchBar } from "./dashboard/_components/search-bar";
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
