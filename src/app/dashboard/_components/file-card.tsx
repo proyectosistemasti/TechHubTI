@@ -21,6 +21,7 @@ import {
   FileIcon,
   NotepadTextIcon,
   FileBarChart2,
+  StarIcon,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -37,6 +38,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
+import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 
 // Componente para manejar las acciones del archivo
 export function FileCardActions({ file }: { file: Doc<"files"> }) {
@@ -81,6 +83,15 @@ export function FileCardActions({ file }: { file: Doc<"files"> }) {
           <MoreVertical />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
+          <DropdownMenuItem
+            onClick={() => setIsConfirmOpen(true)} // Abrir el diálogo de confirmación
+            className="flex gap-1 text-yellow-500 items-center cursor-pointer"
+          >
+            <StarIcon className="w-5 h-5" />
+            <DropdownMenuSeparator/>
+            Favorite
+          </DropdownMenuItem>
+
           <DropdownMenuItem
             onClick={() => setIsConfirmOpen(true)} // Abrir el diálogo de confirmación
             className="flex gap-1 text-red-500 items-center cursor-pointer"
