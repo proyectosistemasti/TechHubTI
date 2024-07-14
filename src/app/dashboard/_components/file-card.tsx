@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Doc, Id } from "../../../../convex/_generated/dataModel";
+import { Doc } from "../../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -22,6 +22,7 @@ import {
   NotepadTextIcon,
   FileBarChart2,
   StarIcon,
+  StarHalf,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -41,7 +42,7 @@ import Image from "next/image";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 
 // Componente para manejar las acciones del archivo
-export function FileCardActions({ file }: { file: Doc<"files"> }) {
+export function FileCardActions({ file, isFavorited }: { file: Doc<"files">; isFavorited: boolean; }) {
   // Mutación para eliminar el archivo
   const deleteFile = useMutation(api.files.deleteFile);
   const toggleFavorite = useMutation(api.files.toggleFavorite);
@@ -85,20 +86,30 @@ export function FileCardActions({ file }: { file: Doc<"files"> }) {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem
-            onClick={() =>
-              {
-                toggleFavorite({
-                  fileId: file._id
-                })
-              }
-            } // Abrir el diálogo de confirmación
-            className="flex gap-1 text-yellow-500 items-center cursor-pointer"
-          >
-            <StarIcon className="w-5 h-5" />
-            <DropdownMenuSeparator/>
-            Favorite
-          </DropdownMenuItem>
+            onClick={async () => {
+              await toggleFavorite({
+                fileId: file._id
+              });
 
+              toast({
+                variant: "default",
+                title: isFavorited ? "Removed from favorites" : "Added to favorites",
+                description: isFavorited ? "The file was removed from your favorites" : "The file was added to your favorites",
+              });
+            }}
+            className="flex gap-1 items-center cursor-pointer text-yellow-500"
+          >
+            {isFavorited ? (
+              <div className="flex gap-1 items-center">
+                <StarHalf className="w-5 h-5" /> Unfavorite
+              </div>
+            ) : (
+              <div className="flex gap-1 items-center">
+                <StarIcon className="w-5 h-5" /> Favorite
+              </div>
+            )}
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => setIsConfirmOpen(true)} // Abrir el diálogo de confirmación
             className="flex gap-1 text-red-500 items-center cursor-pointer"
@@ -113,7 +124,7 @@ export function FileCardActions({ file }: { file: Doc<"files"> }) {
 }
 
 // Componente para mostrar la tarjeta del archivo
-export function FileCard({ file }: { file: Doc<"files"> }) {
+export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: Doc<"favorites">[] }) {
   const [fileUrl, setFileUrl] = useState<string | null>(null); // Estado para la URL del archivo
   const url = useQuery(api.files.getFileUrl, { fileId: file.fileId }); // Consulta para obtener la URL del archivo
 
@@ -132,6 +143,10 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
     txt: <NotepadTextIcon />,
   };
 
+  const isFavorited = favorites.some(
+    (favorite) => favorite.fileId === file._id
+  )
+
   return (
     <Card>
       <CardHeader className="relative">
@@ -140,7 +155,7 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
           {file.name}
         </CardTitle>
         <div className="absolute top-2 right-2">
-          <FileCardActions file={file} /> {/* Acciones de la tarjeta */}
+          <FileCardActions isFavorited={isFavorited} file={file} />
         </div>
       </CardHeader>
       <CardContent className="h-[200px] flex items-center justify-center overflow-hidden">
@@ -155,7 +170,6 @@ export function FileCard({ file }: { file: Doc<"files"> }) {
         ) : (
           <div className="flex flex-col items-center justify-center">
             {typeIcons[file.type]}
-            {/* <div>{file.name}</div> */}
           </div>
         )}
       </CardContent>
