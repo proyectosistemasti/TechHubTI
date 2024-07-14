@@ -40,6 +40,7 @@ import { api } from "../../../../convex/_generated/api";
 import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
+import { Protect } from "@clerk/nextjs";
 
 // Componente para manejar las acciones del archivo
 export function FileCardActions({ file, isFavorited }: { file: Doc<"files">; isFavorited: boolean; }) {
@@ -109,14 +110,20 @@ export function FileCardActions({ file, isFavorited }: { file: Doc<"files">; isF
               </div>
             )}
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => setIsConfirmOpen(true)} // Abrir el diálogo de confirmación
-            className="flex gap-1 text-red-500 items-center cursor-pointer"
+          <Protect
+            role= "org:admin"
+            fallback={<></>}
           >
-            <TrashIcon className="w-5 h-5" />
-            Delete
-          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+
+            <DropdownMenuItem
+              onClick={() => setIsConfirmOpen(true)} // Abrir el diálogo de confirmación
+              className="flex gap-1 text-red-500 items-center cursor-pointer"
+            >
+              <TrashIcon className="w-5 h-5" />
+              Delete
+            </DropdownMenuItem>
+          </Protect>
         </DropdownMenuContent>
       </DropdownMenu>
     </>

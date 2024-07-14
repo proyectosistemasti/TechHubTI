@@ -41,7 +41,8 @@ async function hasAccessToOrg(
 
   // Verificar si el usuario tiene acceso a la organización
   const hasAccess =
-    user.orgIds.includes(orgId) || user.tokenIdentifier.includes(orgId);
+    user.orgIds.some((item) => item.orgId === orgId) ||
+    user.tokenIdentifier.includes(orgId);
 
   if (!hasAccess) {
     return null;
@@ -207,13 +208,13 @@ async function hasAccessToFile(
 
   if (!file) {
     return null;
-    }
+  }
 
   const hasAccess = await hasAccessToOrg(ctx, file.orgId);
 
   if (!hasAccess) {
     return null;
-    }
+  }
 
   return { user: hasAccess.user, file };
 }
