@@ -23,6 +23,7 @@ import {
   FileBarChart2,
   StarIcon,
   StarHalf,
+  UndoIcon,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -41,11 +42,13 @@ import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { Protect } from "@clerk/nextjs";
+import { restoreFile } from '../../../../convex/files';
 
 // Componente para manejar las acciones del archivo
 export function FileCardActions({ file, isFavorited }: { file: Doc<"files">; isFavorited: boolean; }) {
   // Mutación para eliminar el archivo
   const deleteFile = useMutation(api.files.deleteFile);
+  const restoreFile = useMutation(api.files.restoreFile);
   const toggleFavorite = useMutation(api.files.toggleFavorite);
   const { toast } = useToast(); // Hook para mostrar notificaciones
   const [isConfirmOpen, setIsConfirmOpen] = useState(false); // Estado para el diálogo de confirmación
@@ -57,7 +60,7 @@ export function FileCardActions({ file, isFavorited }: { file: Doc<"files">; isF
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action will mark the file for our deletio process. Files are deleted periodically
+              This action will mark the file for our deletion process. Files are deleted periodically
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -115,13 +118,29 @@ export function FileCardActions({ file, isFavorited }: { file: Doc<"files">; isF
           > */}
           <DropdownMenuSeparator />
 
-            <DropdownMenuItem
-              onClick={() => setIsConfirmOpen(true)} // Abrir el diálogo de confirmación
-              className="flex gap-1 text-red-500 items-center cursor-pointer"
-            >
-              <TrashIcon className="w-5 h-5" />
-              Delete
-            </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              if(file.shouldDelete) {
+                restoreFile({
+                  fileId: file._id
+                })
+              } else {
+                setIsConfirmOpen(true)} // Abrir el diálogo de confirmación
+              }
+
+            }
+            className="flex gap-1 items-center cursor-pointer"
+          >
+            {file.shouldDelete ? (
+              <div className="flex gap-1 text-lime-400 items-center cursor-pointer">
+                <UndoIcon className="w-5 h-5" /> Restore
+              </div>
+            ) : (
+              <div className="flex gap-1 text-red-600 items-center cursor-pointer">
+                <TrashIcon className="w-5 h-5" /> Delete
+              </div>
+            )}
+          </DropdownMenuItem>
           {/* </Protect> */}
         </DropdownMenuContent>
       </DropdownMenu>
