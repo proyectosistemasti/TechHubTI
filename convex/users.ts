@@ -51,9 +51,7 @@ export const updateUser = internalMutation({
       throw new ConvexError("No user with this token was found");
     }
 
-    await ctx.db.insert("users", {
-      tokenIdentifier: args.tokenIdentifier,
-      orgIds: [],
+    await ctx.db.patch(user._id, {
       name: args.name,
       image: args.image,
     });
