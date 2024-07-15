@@ -110,10 +110,10 @@ export function FileCardActions({ file, isFavorited }: { file: Doc<"files">; isF
               </div>
             )}
           </DropdownMenuItem>
-          <Protect
+          {/* <Protect
             role= "org:admin"
             fallback={<></>}
-          >
+          > */}
           <DropdownMenuSeparator />
 
             <DropdownMenuItem
@@ -123,7 +123,7 @@ export function FileCardActions({ file, isFavorited }: { file: Doc<"files">; isF
               <TrashIcon className="w-5 h-5" />
               Delete
             </DropdownMenuItem>
-          </Protect>
+          {/* </Protect> */}
         </DropdownMenuContent>
       </DropdownMenu>
     </>
