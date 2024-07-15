@@ -89,3 +89,15 @@ export const updateRoleInOrgForUser = internalMutation({
     });
   },
 });
+
+const getUserProfile = query({
+  args: { userId: v.id("users") },
+  async handler(ctx, args) {
+    const user = await ctx.db.get(args.userId);
+
+    return {
+      name: user?.name,
+      image: user?.image,
+    };
+  },
+});

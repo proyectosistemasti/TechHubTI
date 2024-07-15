@@ -50,6 +50,7 @@ export function FileCardActions({ file, isFavorited }: { file: Doc<"files">; isF
   const deleteFile = useMutation(api.files.deleteFile);
   const restoreFile = useMutation(api.files.restoreFile);
   const toggleFavorite = useMutation(api.files.toggleFavorite);
+  const userProfile = useMutation(api.users.getUserProfile);
   const { toast } = useToast(); // Hook para mostrar notificaciones
   const [isConfirmOpen, setIsConfirmOpen] = useState(false); // Estado para el diálogo de confirmación
 
