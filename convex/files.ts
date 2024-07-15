@@ -131,9 +131,10 @@ export const getFiles = query({
 
 
 export const deleteAllFiles = internalMutation({
-  args: { fileId: v.id("files") },
+  args: {},
   async handler(ctx) {
-    const files = await ctx.db.query("files")
+    const files = await ctx.db
+    .query("files")
     .withIndex("by_shouldDelete", (q) => q.eq("shouldDelete", true))
     .collect();
 

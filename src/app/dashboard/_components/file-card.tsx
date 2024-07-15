@@ -113,34 +113,35 @@ export function FileCardActions({ file, isFavorited }: { file: Doc<"files">; isF
             )}
           </DropdownMenuItem>
           <Protect
-            role= "org:admin"
+            role="org:admin"
             fallback={<></>}
           >
-          <DropdownMenuSeparator />
+            <DropdownMenuSeparator />
 
-          <DropdownMenuItem
-            onClick={() => {
-              if(file.shouldDelete) {
-                restoreFile({
-                  fileId: file._id
-                })
-              } else {
-                setIsConfirmOpen(true)} // Abrir el diálogo de confirmación
+            <DropdownMenuItem
+              onClick={() => {
+                if (file.shouldDelete) {
+                  restoreFile({
+                    fileId: file._id
+                  })
+                } else {
+                  setIsConfirmOpen(true)
+                }
               }
 
-            }
-            className="flex gap-1 items-center cursor-pointer"
-          >
-            {file.shouldDelete ? (
-              <div className="flex gap-1 text-lime-400 items-center cursor-pointer">
-                <UndoIcon className="w-5 h-5" /> Restore
-              </div>
-            ) : (
-              <div className="flex gap-1 text-red-600 items-center cursor-pointer">
-                <TrashIcon className="w-5 h-5" /> Delete
-              </div>
-            )}
-          </DropdownMenuItem>
+              }
+              className="flex gap-1 items-center cursor-pointer"
+            >
+              {file.shouldDelete ? (
+                <div className="flex gap-1 text-lime-400 items-center cursor-pointer">
+                  <UndoIcon className="w-5 h-5" /> Restore
+                </div>
+              ) : (
+                <div className="flex gap-1 text-red-600 items-center cursor-pointer">
+                  <TrashIcon className="w-5 h-5" /> Delete
+                </div>
+              )}
+            </DropdownMenuItem>
           </Protect>
         </DropdownMenuContent>
       </DropdownMenu>
