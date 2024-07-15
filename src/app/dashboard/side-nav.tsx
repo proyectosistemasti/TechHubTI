@@ -28,9 +28,9 @@ export function SideNav() {
         </Button>
       </Link>
 
-      <Link href="/trash">
+      <Link href="/dashboard/trash">
         <Button variant={"link"} className={clsx("flex gap-2", {
-            "text-red-400": pathname.includes("dashboard/trash")
+            "text-red-600": pathname.includes("dashboard/trash")
           })}>
           <TrashIcon /> Trash
         </Button>

@@ -57,8 +57,7 @@ export function FileCardActions({ file, isFavorited }: { file: Doc<"files">; isF
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
+              This action will mark the file for our deletio process. Files are deleted periodically
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -70,8 +69,8 @@ export function FileCardActions({ file, isFavorited }: { file: Doc<"files">; isF
                 });
                 toast({
                   variant: "default",
-                  title: "File deleted",
-                  description: "Your file is now gone from the system",
+                  title: "File market for deletion",
+                  description: "Your file will be deleted soon",
                 });
               }}
             >
