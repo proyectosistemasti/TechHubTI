@@ -1,18 +1,16 @@
 'use client'
 
-import { ColumnDef } from "@tanstack/react-table"
-import { Doc, Id } from "../../../../convex/_generated/dataModel"
-import { formatRelative } from "date-fns"
-import { getUserProfile } from '../../../../convex/users';
-import { api } from "../../../../convex/_generated/api";
+import { ColumnDef } from "@tanstack/react-table";
+import { Doc, Id } from "../../../../convex/_generated/dataModel";
+import { formatRelative } from "date-fns";
 import { useQuery } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
+import { FileCardActions } from "./file-actions";
+import { useEffect, useState } from "react";
 
 function UserCell({ userId }: { userId: Id<"users"> }) {
-  const userProfile = useQuery(api.users.getUserProfile, {
-    userId: userId,
-  })
+  const userProfile = useQuery(api.users.getUserProfile, { userId });
   return (
     <div className="flex items-center w-40 gap-2 text-xs text-neutral-600">
       <Avatar className="w-7 h-7">
@@ -21,7 +19,20 @@ function UserCell({ userId }: { userId: Id<"users"> }) {
       </Avatar>
       {userProfile?.name}
     </div>
-  )
+  );
+}
+
+function FileCardActionsWrapper({ file }: { file: Doc<"files"> }) {
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
+  const url = useQuery(api.files.getFileUrl, { fileId: file.fileId });
+
+  useEffect(() => {
+    if (url) {
+      setFileUrl(url);
+    }
+  }, [url]);
+
+  return <FileCardActions file={file} isFavorited={false} fileUrl={fileUrl} />;
 }
 
 export const columns: ColumnDef<Doc<"files">>[] = [
@@ -35,14 +46,20 @@ export const columns: ColumnDef<Doc<"files">>[] = [
   },
   {
     header: "User",
-    cell: ({ row }) => {
-      return <UserCell userId={row.original.userId} />
-    },
+    cell: ({ row }) => <UserCell userId={row.original.userId} />,
   },
   {
     header: "Uploaded On",
-    cell: ({ row }) => {
-      return <div>{formatRelative(new Date(row.original._creationTime), new Date())}</div>
-    },
-  }
-]
+    cell: ({ row }) => (
+      <div>{formatRelative(new Date(row.original._creationTime), new Date())}</div>
+    ),
+  },
+  {
+    header: "Actions",
+    cell: ({ row }) => (
+      <div>
+        <FileCardActionsWrapper file={row.original}/>
+      </div>
+    ),
+  },
+];

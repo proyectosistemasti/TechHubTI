@@ -173,10 +173,6 @@ export const deleteFile = mutation({
 });
 
 
-
-
-
-
 export const restoreFile = mutation({
   args: { fileId: v.id("files") },
   async handler(ctx, args) {
@@ -198,9 +194,6 @@ export const restoreFile = mutation({
     });
   },
 });
-
-
-
 
 
 // Consulta para obtener la URL de un archivo

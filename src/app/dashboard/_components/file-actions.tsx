@@ -1,30 +1,19 @@
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Doc } from "../../../../convex/_generated/dataModel";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  ImageIcon,
-  MoreVertical,
-  TrashIcon,
-  FileTextIcon,
-  FileIcon,
-  NotepadTextIcon,
-  FileBarChart2,
-  StarIcon,
-  StarHalf,
-  UndoIcon,
   Download,
+  FileIcon,
+  MoreVertical,
+  StarHalf,
+  StarIcon,
+  TrashIcon,
+  UndoIcon,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -36,17 +25,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ReactNode, useEffect, useState } from "react";
-import { useMutation, useQuery } from "convex/react";
+import { useState } from "react";
+import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { useToast } from "@/components/ui/use-toast";
-import Image from "next/image";
-import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { Protect } from "@clerk/nextjs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { formatRelative } from 'date-fns';
 
-// Componente para manejar las acciones del archivo
 export function FileCardActions({ file, fileUrl, isFavorited }: { file: Doc<"files">; fileUrl: string | null; isFavorited: boolean; }) {
   const deleteFile = useMutation(api.files.deleteFile);
   const restoreFile = useMutation(api.files.restoreFile);
@@ -152,72 +136,5 @@ export function FileCardActions({ file, fileUrl, isFavorited }: { file: Doc<"fil
         </DropdownMenuContent>
       </DropdownMenu>
     </>
-  );
-}
-
-// Componente para mostrar la tarjeta del archivo
-export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: Doc<"favorites">[] }) {
-  const [fileUrl, setFileUrl] = useState<string | null>(null);
-  const url = useQuery(api.files.getFileUrl, { fileId: file.fileId });
-
-  useEffect(() => {
-    if (url) {
-      setFileUrl(url);
-    }
-  }, [url]);
-
-  const userProfile = useQuery(api.users.getUserProfile, {
-    userId: file.userId
-  });
-
-  const typeIcons: Record<string, ReactNode> = {
-    image: <ImageIcon />,
-    pdf: <FileIcon />,
-    csv: <FileBarChart2 />,
-    doc: <FileTextIcon />,
-    txt: <NotepadTextIcon />,
-  };
-
-  const isFavorited = favorites?.some((favorite) => favorite.fileId === file._id) || false;
-
-  return (
-    <Card>
-      <CardHeader className="relative">
-        <CardTitle className="flex items-center gap-2 text-base font-bold">
-          <div className="flex justify-center">{typeIcons[file.type]}</div>
-          {file.name}
-        </CardTitle>
-        <div className="absolute top-2 right-2">
-          <FileCardActions isFavorited={isFavorited} file={file} fileUrl={fileUrl} />
-        </div>
-      </CardHeader>
-      <CardContent className="h-[200px] flex items-center justify-center overflow-hidden">
-        {file.type === "image" && fileUrl ? (
-          <Image
-            alt={file.name}
-            src={fileUrl}
-            width={200}
-            height={200}
-            className="object-cover w-full h-full"
-          />
-        ) : (
-          <div className="flex flex-col items-center justify-center">
-            {typeIcons[file.type]}
-          </div>
-        )}
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <div className="flex items-center w-40 gap-2 text-xs text-neutral-600">
-          <Avatar className="w-7 h-7">
-            <AvatarImage src={userProfile?.image} />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          {userProfile?.name}
-        </div>
-        <div className="text-xs text-neutral-800">
-          Uploaded {formatRelative(new Date(file._creationTime), new Date())}
-        </div>
-      </CardFooter>
-    </Card>
   );
 }
