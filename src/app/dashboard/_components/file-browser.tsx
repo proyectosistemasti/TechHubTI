@@ -52,36 +52,43 @@ export function FileBrowser({ title, favoritesOnly, deletedOnly }: { title: stri
       orgId ? { orgId, query, favorites: favoritesOnly, deletedOnly } : 'skip');
   const isLoading = files === undefined;
 
-  return (
-    <div>
-      {isLoading && (
-        <div className="flex flex-col items-center w-full gap-8 mt-24">
-          <Loader2 className="w-32 h-32 text-gray-500 animate-spin" />
-          <div className="text-2xl">Loading your files...</div>
+  const modifiedFiles = files?.map((file) => ({
+    ...file,
+    isFavorited : (favorites ?? []).some(
+      (favorite) => favorite.fileId === file._id
+    ),
+})) ?? []
+
+return (
+  <div>
+    {isLoading && (
+      <div className="flex flex-col items-center w-full gap-8 mt-24">
+        <Loader2 className="w-32 h-32 text-gray-500 animate-spin" />
+        <div className="text-2xl">Loading your files...</div>
+      </div>
+    )}
+
+    {!isLoading && (
+      <>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-4xl font-bold">{title}</h1>
+          <SearchBar query={query} setQuery={setQuery} />
+          <UploadButton />
         </div>
-      )}
 
-      {!isLoading && (
-        <>
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-4xl font-bold">{title}</h1>
-            <SearchBar query={query} setQuery={setQuery} />
-            <UploadButton />
-          </div>
+        {files.length === 0 && <PlaceHolder />}
 
-          {files.length === 0 && <PlaceHolder />}
+        <DataTable columns={columns} data={modifiedFiles} />
 
-          <DataTable columns={columns} data={files} />
-
-          <div className="grid grid-cols-4 gap-4">
-            {files?.map((file) => {
-              return (
-                <FileCard favorites={favorites ?? []} key={file._id} file={file} />
-              );
-            })}
-          </div>
-        </>
-      )}
-    </div>
-  );
+        <div className="grid grid-cols-4 gap-4">
+          {modifiedFiles?.map((file) => {
+            return (
+              <FileCard key={file._id} file={file} />
+            );
+          })}
+        </div>
+      </>
+    )}
+  </div>
+);
 }

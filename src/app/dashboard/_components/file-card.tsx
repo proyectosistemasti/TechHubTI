@@ -156,7 +156,7 @@ export function FileCardActions({ file, fileUrl, isFavorited }: { file: Doc<"fil
 }
 
 // Componente para mostrar la tarjeta del archivo
-export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: Doc<"favorites">[] }) {
+export function FileCard({ file }: { file: Doc<"files"> & {isFavorited: boolean}}) {
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const url = useQuery(api.files.getFileUrl, { fileId: file.fileId });
 
@@ -178,8 +178,6 @@ export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: D
     txt: <NotepadTextIcon />,
   };
 
-  const isFavorited = favorites?.some((favorite) => favorite.fileId === file._id) || false;
-
   return (
     <Card>
       <CardHeader className="relative">
@@ -188,7 +186,7 @@ export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: D
           {file.name}
         </CardTitle>
         <div className="absolute top-2 right-2">
-          <FileCardActions isFavorited={isFavorited} file={file} fileUrl={fileUrl} />
+          <FileCardActions isFavorited={file.isFavorited} file={file} fileUrl={fileUrl} />
         </div>
       </CardHeader>
       <CardContent className="h-[200px] flex items-center justify-center overflow-hidden">

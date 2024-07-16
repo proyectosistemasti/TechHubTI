@@ -6,7 +6,7 @@ import { formatRelative } from "date-fns";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { FileCardActions } from "./file-actions";
+import { FileCardActions } from "./file-card";
 import { useEffect, useState } from "react";
 
 function UserCell({ userId }: { userId: Id<"users"> }) {
@@ -22,7 +22,7 @@ function UserCell({ userId }: { userId: Id<"users"> }) {
   );
 }
 
-function FileCardActionsWrapper({ file }: { file: Doc<"files"> }) {
+function FileCardActionsWrapper({ file, isFavorited }: { file: Doc<"files">, isFavorited: boolean }) {
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const url = useQuery(api.files.getFileUrl, { fileId: file.fileId });
 
@@ -32,10 +32,10 @@ function FileCardActionsWrapper({ file }: { file: Doc<"files"> }) {
     }
   }, [url]);
 
-  return <FileCardActions file={file} isFavorited={false} fileUrl={fileUrl} />;
+  return <FileCardActions file={file} isFavorited={isFavorited} fileUrl={fileUrl} />;
 }
 
-export const columns: ColumnDef<Doc<"files">>[] = [
+export const columns: ColumnDef<Doc<"files"> & { isFavorited: boolean }>[] = [
   {
     accessorKey: "name",
     header: "Name",
@@ -58,7 +58,7 @@ export const columns: ColumnDef<Doc<"files">>[] = [
     header: "Actions",
     cell: ({ row }) => (
       <div>
-        <FileCardActionsWrapper file={row.original}/>
+        <FileCardActionsWrapper file={row.original} isFavorited={row.original.isFavorited} />
       </div>
     ),
   },
