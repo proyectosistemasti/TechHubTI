@@ -13,6 +13,7 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { DataTable } from "./file-table";
 import { columns } from "./columns";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 function PlaceHolder() {
   return (
@@ -54,41 +55,51 @@ export function FileBrowser({ title, favoritesOnly, deletedOnly }: { title: stri
 
   const modifiedFiles = files?.map((file) => ({
     ...file,
-    isFavorited : (favorites ?? []).some(
+    isFavorited: (favorites ?? []).some(
       (favorite) => favorite.fileId === file._id
     ),
-})) ?? []
+  })) ?? []
 
-return (
-  <div>
-    {isLoading && (
-      <div className="flex flex-col items-center w-full gap-8 mt-24">
-        <Loader2 className="w-32 h-32 text-gray-500 animate-spin" />
-        <div className="text-2xl">Loading your files...</div>
-      </div>
-    )}
-
-    {!isLoading && (
-      <>
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-4xl font-bold">{title}</h1>
-          <SearchBar query={query} setQuery={setQuery} />
-          <UploadButton />
+  return (
+    <div>
+      {isLoading && (
+        <div className="flex flex-col items-center w-full gap-8 mt-24">
+          <Loader2 className="w-32 h-32 text-gray-500 animate-spin" />
+          <div className="text-2xl">Loading your files...</div>
         </div>
+      )}
 
-        {files.length === 0 && <PlaceHolder />}
+      {!isLoading && (
+        <>
+          <div className="flex items-center justify-between mb-8">
+            <h1 className="text-4xl font-bold">{title}</h1>
+            <SearchBar query={query} setQuery={setQuery} />
+            <UploadButton />
+          </div>
 
-        <DataTable columns={columns} data={modifiedFiles} />
+          <Tabs defaultValue="account" className="w-[400px]">
+            <TabsList>
+              <TabsTrigger value="account">Account</TabsTrigger>
+              <TabsTrigger value="password">Password</TabsTrigger>
+            </TabsList>
+            <TabsContent value="account">Make changes to your account here.</TabsContent>
+            <TabsContent value="password">Change your password here.</TabsContent>
+          </Tabs>
 
-        <div className="grid grid-cols-4 gap-4">
-          {modifiedFiles?.map((file) => {
-            return (
-              <FileCard key={file._id} file={file} />
-            );
-          })}
-        </div>
-      </>
-    )}
-  </div>
-);
+
+          {files.length === 0 && <PlaceHolder />}
+
+          <DataTable columns={columns} data={modifiedFiles} />
+
+          <div className="grid grid-cols-4 gap-4">
+            {modifiedFiles?.map((file) => {
+              return (
+                <FileCard key={file._id} file={file} />
+              );
+            })}
+          </div>
+        </>
+      )}
+    </div>
+  );
 }

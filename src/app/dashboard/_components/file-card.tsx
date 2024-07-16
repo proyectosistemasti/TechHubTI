@@ -46,6 +46,7 @@ import { Protect } from "@clerk/nextjs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatRelative } from 'date-fns';
 
+
 // Componente para manejar las acciones del archivo
 export function FileCardActions({ file, fileUrl, isFavorited }: { file: Doc<"files">; fileUrl: string | null; isFavorited: boolean; }) {
   const deleteFile = useMutation(api.files.deleteFile);
