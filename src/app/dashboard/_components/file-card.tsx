@@ -24,6 +24,7 @@ import {
   StarIcon,
   StarHalf,
   UndoIcon,
+  Download,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -42,15 +43,14 @@ import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { Protect } from "@clerk/nextjs";
-import { restoreFile } from '../../../../convex/files';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 // Componente para manejar las acciones del archivo
-export function FileCardActions({ file, isFavorited }: { file: Doc<"files">; isFavorited: boolean; }) {
+export function FileCardActions({ file, fileUrl, isFavorited }: { file: Doc<"files">; fileUrl: string | null; isFavorited: boolean; }) {
   // Mutación para eliminar el archivo
   const deleteFile = useMutation(api.files.deleteFile);
   const restoreFile = useMutation(api.files.restoreFile);
   const toggleFavorite = useMutation(api.files.toggleFavorite);
-  const userProfile = useMutation(api.users.getUserProfile);
   const { toast } = useToast(); // Hook para mostrar notificaciones
   const [isConfirmOpen, setIsConfirmOpen] = useState(false); // Estado para el diálogo de confirmación
 
@@ -73,7 +73,7 @@ export function FileCardActions({ file, isFavorited }: { file: Doc<"files">; isF
                 });
                 toast({
                   variant: "default",
-                  title: "File market for deletion",
+                  title: "File marked for deletion",
                   description: "Your file will be deleted soon",
                 });
               }}
@@ -101,18 +101,30 @@ export function FileCardActions({ file, isFavorited }: { file: Doc<"files">; isF
                 description: isFavorited ? "The file was removed from your favorites" : "The file was added to your favorites",
               });
             }}
-            className="flex gap-1 items-center cursor-pointer text-yellow-500"
+            className="flex items-center gap-1 text-yellow-500 cursor-pointer"
           >
             {isFavorited ? (
-              <div className="flex gap-1 items-center">
+              <div className="flex items-center gap-1">
                 <StarHalf className="w-5 h-5" /> Unfavorite
               </div>
             ) : (
-              <div className="flex gap-1 items-center">
+              <div className="flex items-center gap-1">
                 <StarIcon className="w-5 h-5" /> Favorite
               </div>
             )}
           </DropdownMenuItem>
+
+          <DropdownMenuItem
+            onClick={() => {
+              if (fileUrl) {
+                window.open(fileUrl, "_blank"); // Abrir el archivo en una nueva pestaña
+              }
+            }}
+            className="flex items-center gap-1 cursor-pointer"
+          >
+            <Download className="w-5 h-5 " /> Download
+          </DropdownMenuItem>
+
           <Protect
             role="org:admin"
             fallback={<></>}
@@ -128,17 +140,15 @@ export function FileCardActions({ file, isFavorited }: { file: Doc<"files">; isF
                 } else {
                   setIsConfirmOpen(true)
                 }
-              }
-
-              }
-              className="flex gap-1 items-center cursor-pointer"
+              }}
+              className="flex items-center gap-1 cursor-pointer"
             >
               {file.shouldDelete ? (
-                <div className="flex gap-1 text-lime-400 items-center cursor-pointer">
+                <div className="flex items-center gap-1 cursor-pointer text-lime-400">
                   <UndoIcon className="w-5 h-5" /> Restore
                 </div>
               ) : (
-                <div className="flex gap-1 text-red-600 items-center cursor-pointer">
+                <div className="flex items-center gap-1 text-red-600 cursor-pointer">
                   <TrashIcon className="w-5 h-5" /> Delete
                 </div>
               )}
@@ -161,6 +171,10 @@ export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: D
     }
   }, [url]);
 
+  const userProfile = useQuery(api.users.getUserProfile, {
+    userId: file.userId
+  });
+
   // Iconos para diferentes tipos de archivos
   const typeIcons: Record<string, ReactNode> = {
     image: <ImageIcon />,
@@ -172,17 +186,17 @@ export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: D
 
   const isFavorited = favorites.some(
     (favorite) => favorite.fileId === file._id
-  )
+  );
 
   return (
     <Card>
       <CardHeader className="relative">
-        <CardTitle className="flex gap-2 items-center">
+        <CardTitle className="flex items-center gap-2">
           <div className="flex justify-center">{typeIcons[file.type]}</div>
           {file.name}
         </CardTitle>
         <div className="absolute top-2 right-2">
-          <FileCardActions isFavorited={isFavorited} file={file} />
+          <FileCardActions isFavorited={isFavorited} file={file} fileUrl={fileUrl} />
         </div>
       </CardHeader>
       <CardContent className="h-[200px] flex items-center justify-center overflow-hidden">
@@ -200,16 +214,17 @@ export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: D
           </div>
         )}
       </CardContent>
-      <CardFooter className="flex justify-center">
-        <Button
-          onClick={() => {
-            if (fileUrl) {
-              window.open(fileUrl, "_blank"); // Abrir el archivo en una nueva pestaña
-            }
-          }}
-        >
-          Download
-        </Button>
+      <CardFooter className="flex justify-between">
+        <div className="flex items-center w-40 gap-2 text-xs text-neutral-500">
+          <Avatar className="w-7 h-7">
+            <AvatarImage src={userProfile?.image} />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          {userProfile?.name}
+        </div>
+        <div className="text-xs">
+          Uploaded on {file._creationTime}
+        </div>
       </CardFooter>
     </Card>
   );

@@ -90,7 +90,7 @@ export const updateRoleInOrgForUser = internalMutation({
   },
 });
 
-const getUserProfile = query({
+export const getUserProfile = query({
   args: { userId: v.id("users") },
   async handler(ctx, args) {
     const user = await ctx.db.get(args.userId);
