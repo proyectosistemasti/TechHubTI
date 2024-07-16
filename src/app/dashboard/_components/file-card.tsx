@@ -44,15 +44,15 @@ import Image from "next/image";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { Protect } from "@clerk/nextjs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { format, formatRelative } from 'date-fns'
 
 // Componente para manejar las acciones del archivo
 export function FileCardActions({ file, fileUrl, isFavorited }: { file: Doc<"files">; fileUrl: string | null; isFavorited: boolean; }) {
-  // Mutación para eliminar el archivo
   const deleteFile = useMutation(api.files.deleteFile);
   const restoreFile = useMutation(api.files.restoreFile);
   const toggleFavorite = useMutation(api.files.toggleFavorite);
-  const { toast } = useToast(); // Hook para mostrar notificaciones
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false); // Estado para el diálogo de confirmación
+  const { toast } = useToast();
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   return (
     <>
@@ -68,9 +68,7 @@ export function FileCardActions({ file, fileUrl, isFavorited }: { file: Doc<"fil
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={async () => {
-                await deleteFile({
-                  fileId: file._id, // Eliminar el archivo usando su ID
-                });
+                await deleteFile({ fileId: file._id });
                 toast({
                   variant: "default",
                   title: "File marked for deletion",
@@ -90,10 +88,19 @@ export function FileCardActions({ file, fileUrl, isFavorited }: { file: Doc<"fil
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem
+            onClick={() => {
+              if (fileUrl) {
+                window.open(fileUrl, "_blank");
+              }
+            }}
+            className="flex items-center gap-1 cursor-pointer"
+          >
+            <Download className="w-5 h-5 " /> Download
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
             onClick={async () => {
-              await toggleFavorite({
-                fileId: file._id
-              });
+              await toggleFavorite({ fileId: file._id });
 
               toast({
                 variant: "default",
@@ -114,17 +121,6 @@ export function FileCardActions({ file, fileUrl, isFavorited }: { file: Doc<"fil
             )}
           </DropdownMenuItem>
 
-          <DropdownMenuItem
-            onClick={() => {
-              if (fileUrl) {
-                window.open(fileUrl, "_blank"); // Abrir el archivo en una nueva pestaña
-              }
-            }}
-            className="flex items-center gap-1 cursor-pointer"
-          >
-            <Download className="w-5 h-5 " /> Download
-          </DropdownMenuItem>
-
           <Protect
             role="org:admin"
             fallback={<></>}
@@ -134,11 +130,9 @@ export function FileCardActions({ file, fileUrl, isFavorited }: { file: Doc<"fil
             <DropdownMenuItem
               onClick={() => {
                 if (file.shouldDelete) {
-                  restoreFile({
-                    fileId: file._id
-                  })
+                  restoreFile({ fileId: file._id });
                 } else {
-                  setIsConfirmOpen(true)
+                  setIsConfirmOpen(true);
                 }
               }}
               className="flex items-center gap-1 cursor-pointer"
@@ -162,12 +156,12 @@ export function FileCardActions({ file, fileUrl, isFavorited }: { file: Doc<"fil
 
 // Componente para mostrar la tarjeta del archivo
 export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: Doc<"favorites">[] }) {
-  const [fileUrl, setFileUrl] = useState<string | null>(null); // Estado para la URL del archivo
-  const url = useQuery(api.files.getFileUrl, { fileId: file.fileId }); // Consulta para obtener la URL del archivo
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
+  const url = useQuery(api.files.getFileUrl, { fileId: file.fileId });
 
   useEffect(() => {
     if (url) {
-      setFileUrl(url); // Actualizar el estado de la URL del archivo
+      setFileUrl(url);
     }
   }, [url]);
 
@@ -175,7 +169,6 @@ export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: D
     userId: file.userId
   });
 
-  // Iconos para diferentes tipos de archivos
   const typeIcons: Record<string, ReactNode> = {
     image: <ImageIcon />,
     pdf: <FileIcon />,
@@ -184,14 +177,12 @@ export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: D
     txt: <NotepadTextIcon />,
   };
 
-  const isFavorited = favorites.some(
-    (favorite) => favorite.fileId === file._id
-  );
+  const isFavorited = favorites?.some((favorite) => favorite.fileId === file._id) || false;
 
   return (
     <Card>
       <CardHeader className="relative">
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-base font-bold">
           <div className="flex justify-center">{typeIcons[file.type]}</div>
           {file.name}
         </CardTitle>
@@ -203,7 +194,7 @@ export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: D
         {file.type === "image" && fileUrl ? (
           <Image
             alt={file.name}
-            src={fileUrl} // Mostrar la imagen usando la URL
+            src={fileUrl}
             width={200}
             height={200}
             className="object-cover w-full h-full"
@@ -215,15 +206,15 @@ export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: D
         )}
       </CardContent>
       <CardFooter className="flex justify-between">
-        <div className="flex items-center w-40 gap-2 text-xs text-neutral-500">
+        <div className="flex items-center w-40 gap-2 text-xs text-neutral-600">
           <Avatar className="w-7 h-7">
             <AvatarImage src={userProfile?.image} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           {userProfile?.name}
         </div>
-        <div className="text-xs">
-          Uploaded on {file._creationTime}
+        <div className="text-xs text-neutral-800">
+          Uploaded on {formatRelative(new Date(file._creationTime), new Date())}
         </div>
       </CardFooter>
     </Card>
