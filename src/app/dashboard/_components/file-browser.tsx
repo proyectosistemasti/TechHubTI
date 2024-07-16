@@ -11,6 +11,8 @@ import Image from "next/image";
 import { SearchBar } from "./search-bar";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { DataTable } from "./file-table";
+import { columns } from "./columns";
 
 function PlaceHolder() {
   return (
@@ -53,8 +55,8 @@ export function FileBrowser({ title, favoritesOnly, deletedOnly }: { title: stri
   return (
     <div>
       {isLoading && (
-        <div className="flex flex-col gap-8 w-full items-center mt-24">
-          <Loader2 className="h-32 w-32 animate-spin text-gray-500" />
+        <div className="flex flex-col items-center w-full gap-8 mt-24">
+          <Loader2 className="w-32 h-32 text-gray-500 animate-spin" />
           <div className="text-2xl">Loading your files...</div>
         </div>
       )}
@@ -68,6 +70,8 @@ export function FileBrowser({ title, favoritesOnly, deletedOnly }: { title: stri
           </div>
 
           {files.length === 0 && <PlaceHolder />}
+
+          <DataTable columns={columns} data={files} />
 
           <div className="grid grid-cols-4 gap-4">
             {files?.map((file) => {

@@ -214,7 +214,7 @@ export function FileCard({ file, favorites }: { file: Doc<"files">, favorites: D
           {userProfile?.name}
         </div>
         <div className="text-xs text-neutral-800">
-          Uploaded on {formatRelative(new Date(file._creationTime), new Date())}
+          Uploaded {formatRelative(new Date(file._creationTime), new Date())}
         </div>
       </CardFooter>
     </Card>
