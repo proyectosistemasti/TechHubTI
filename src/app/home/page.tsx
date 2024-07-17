@@ -10,12 +10,14 @@ import Pricing from "@/_components/Pricing";
 import Testimonials from "@/_components/Testimonials";
 import Video from "@/_components/Video";
 import { Inter } from "@next/font/google";
-
+import Header from "@/_components/Header";
+import Footer from "@/_components/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (
     <>
+     <Header/>
       <ScrollUp />
       <Hero />
       <Features />
@@ -27,6 +29,7 @@ export default function Home() {
       <Pricing />
       <Blog />
       <Contact />
+      <Footer/>
     </>
   );
 }
