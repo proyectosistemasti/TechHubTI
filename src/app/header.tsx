@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export function Header() {
   return (
-    <div className="py-4 border-b bg-gray-50">
+    <div className="relative z-10 py-4 border-b bg-gray-50">
       <div className="container flex items-center justify-between mx-auto">
         <Link href="/" className="flex items-center gap-3">
           <Image

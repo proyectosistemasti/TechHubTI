@@ -10,10 +10,20 @@ import Image from "next/image";
 // import { SearchBar } from "@/app/search-bar";
 import { SearchBar } from "./search-bar";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Grid2X2, GridIcon, Loader2, RowsIcon, TableIcon } from "lucide-react";
 import { DataTable } from "./file-table";
 import { columns } from "./columns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Doc } from "../../../../convex/_generated/dataModel";
+import { Label } from "@/components/ui/label";
+
 
 function PlaceHolder() {
   return (
@@ -37,6 +47,7 @@ export function FileBrowser({ title, favoritesOnly, deletedOnly }: { title: stri
   const organization = useOrganization();
   const user = useUser();
   const [query, setQuery] = useState("");
+  const [type, setType] = useState<Doc<"files">["type"] | "all">("all");
 
   let orgId: string | undefined = undefined;
   if (organization.isLoaded && user.isLoaded) {
@@ -48,49 +59,71 @@ export function FileBrowser({ title, favoritesOnly, deletedOnly }: { title: stri
     orgId ? { orgId } : "skip"
   )
 
-  const files = useQuery
-    (api.files.getFiles,
-      orgId ? { orgId, query, favorites: favoritesOnly, deletedOnly } : 'skip');
+  const files = useQuery(
+    api.files.getFiles,
+    orgId
+      ? {
+        orgId,
+        type: type === "all" ? undefined : type,
+        query,
+        favorites: favoritesOnly,
+        deletedOnly,
+      }
+      : "skip"
+  );
   const isLoading = files === undefined;
 
-  const modifiedFiles = files?.map((file) => ({
-    ...file,
-    isFavorited: (favorites ?? []).some(
-      (favorite) => favorite.fileId === file._id
-    ),
-  })) ?? []
+  const modifiedFiles =
+    files?.map((file) => ({
+      ...file,
+      isFavorited: (favorites ?? []).some(
+        (favorite) => favorite.fileId === file._id
+      ),
+    })) ?? [];
 
   return (
     <div>
-      {isLoading && (
-        <div className="flex flex-col items-center w-full gap-8 mt-24">
-          <Loader2 className="w-32 h-32 text-gray-500 animate-spin" />
-          <div className="text-2xl">Loading your files...</div>
-        </div>
-      )}
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-4xl font-bold">{title}</h1>
+        <SearchBar query={query} setQuery={setQuery} />
+        <UploadButton />
+      </div>
 
-      {!isLoading && (
-        <>
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-4xl font-bold">{title}</h1>
-            <SearchBar query={query} setQuery={setQuery} />
-            <UploadButton />
+      <Tabs defaultValue="grid">
+        <div className="flex justify-between items-center">
+
+          <TabsList className="mb-2">
+            <TabsTrigger value="grid" className="flex gap-2 items-center"><GridIcon />Grid</TabsTrigger>
+            <TabsTrigger value="table" className="flex gap-2 items-center"><RowsIcon />Table</TabsTrigger>
+          </TabsList>
+          <div className="flex gap-2 items-center">
+            <Label htmlFor="type-select">Type Filter</Label>
+            <Select
+              value={type}
+              onValueChange={(newType) => {
+                setType(newType as any);
+              }}
+            >
+              <SelectTrigger id="type-select" className="w-[180px]">
+                <SelectValue placeholder="All" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="image">Image</SelectItem>
+                <SelectItem value="csv">CSV</SelectItem>
+                <SelectItem value="pdf">PDF</SelectItem>
+              </SelectContent>
+            </Select>
+
           </div>
-
-          <Tabs defaultValue="account" className="w-[400px]">
-            <TabsList>
-              <TabsTrigger value="account">Account</TabsTrigger>
-              <TabsTrigger value="password">Password</TabsTrigger>
-            </TabsList>
-            <TabsContent value="account">Make changes to your account here.</TabsContent>
-            <TabsContent value="password">Change your password here.</TabsContent>
-          </Tabs>
-
-
-          {files.length === 0 && <PlaceHolder />}
-
-          <DataTable columns={columns} data={modifiedFiles} />
-
+        </div>
+        {isLoading && (
+          <div className="flex flex-col items-center w-full gap-8 mt-24">
+            <Loader2 className="w-32 h-32 text-gray-500 animate-spin" />
+            <div className="text-2xl">Loading your files...</div>
+          </div>
+        )}
+        <TabsContent value="grid">
           <div className="grid grid-cols-4 gap-4">
             {modifiedFiles?.map((file) => {
               return (
@@ -98,8 +131,14 @@ export function FileBrowser({ title, favoritesOnly, deletedOnly }: { title: stri
               );
             })}
           </div>
-        </>
-      )}
+        </TabsContent>
+        <TabsContent value="table">
+          <DataTable columns={columns} data={modifiedFiles} />
+        </TabsContent>
+      </Tabs>
+
+
+      {files?.length === 0 && <PlaceHolder />}
     </div>
   );
 }
