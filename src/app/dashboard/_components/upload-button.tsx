@@ -22,10 +22,15 @@ import { toast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 import { Doc } from "../../../../convex/_generated/dataModel";
 
+// Define file categories as a literal union type
+const fileCategories = ["manual", "format", "schedule", "video", "other"] as const;
+type FileCategory = typeof fileCategories[number];
+
 const formSchema = z.object({
   title: z.string().min(1).max(200),
   file: z.custom<FileList>((val) => val instanceof FileList, "Required")
-    .refine((files) => files.length > 0, "Required")
+    .refine((files) => files.length > 0, "Required"),
+  category: z.enum([...fileCategories, ]) // Allow undefined as a valid option
 });
 
 export function UploadButton() {
@@ -39,18 +44,16 @@ export function UploadButton() {
     defaultValues: {
       title: "",
       file: undefined,
+      category: undefined // Use undefined as initial value for category
     },
   });
 
   const fileRef = form.register("file");
 
   const [isFileDialogOpen, setIsFileDialogOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Estado de carga
+  const [isLoading, setIsLoading] = useState(false); // Loading state
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // console.log(values);
-    // console.log(values.file);
-
     let orgId: string | undefined = undefined;
     if (organization.isLoaded && user.isLoaded) {
       orgId = organization.organization?.id ?? user.user?.id;
@@ -58,7 +61,7 @@ export function UploadButton() {
 
     if (!orgId) return;
 
-    setIsLoading(true); // Activar estado de carga
+    setIsLoading(true); // Activate loading state
 
     try {
       const postUrl = await generateUploadUrl();
@@ -74,6 +77,7 @@ export function UploadButton() {
 
       const { storageId } = await result.json();
 
+      // Map file types to specific types in the schema
       const types = {
         "image/png": "image",
         "image/jpg": "image",
@@ -92,7 +96,8 @@ export function UploadButton() {
           name: values.title,
           fileId: storageId,
           orgId,
-          type: fileTypeKey
+          type: fileTypeKey,
+          category: values.category as FileCategory // Ensure category matches the specific type
         });
 
         form.reset();
@@ -110,7 +115,7 @@ export function UploadButton() {
           description: "Your file could not be uploaded, try again later"
         });
       } finally {
-        setIsLoading(false); // Desactivar estado de carga
+        setIsLoading(false); // Deactivate loading state
       }
     } catch (error) {
       toast({
@@ -118,7 +123,7 @@ export function UploadButton() {
         title: "Something went wrong",
         description: "An error occurred while uploading, try again later"
       });
-      setIsLoading(false); // Desactivar estado de carga en caso de error
+      setIsLoading(false); // Deactivate loading state on error
     }
   }
 
@@ -164,6 +169,27 @@ export function UploadButton() {
                   <FormLabel>File</FormLabel>
                   <FormControl>
                     <Input type="file" {...fileRef} onChange={(e) => onChange(e.target.files)} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <select {...field} className="input">
+                      <option value="">Select Category</option>
+                      {fileCategories.map((category) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
+                    </select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

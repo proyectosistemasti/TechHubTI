@@ -11,6 +11,15 @@ export const fileTypes = v.union(
 
 export const roles = v.union(v.literal("admin"), v.literal("member"));
 
+// Define the categories as a literal union type
+export const fileCategories = v.union(
+  v.literal("manual"),
+  v.literal("format"),
+  v.literal("schedule"),
+  v.literal("video"),
+  v.literal("other")
+);
+
 export default defineSchema({
   files: defineTable({
     name: v.string(),
@@ -19,6 +28,7 @@ export default defineSchema({
     fileId: v.id("_storage"),
     userId: v.id("users"),
     shouldDelete: v.optional(v.boolean()),
+    category: fileCategories
   })
     .index("by_orgId", ["orgId"])
     .index("by_shouldDelete", ["shouldDelete"]),

@@ -1,7 +1,9 @@
+// files.ts
+
 import { ConvexError, v } from "convex/values";
 import { internalMutation, mutation, MutationCtx, query, QueryCtx } from "./_generated/server";
 import { getUser } from "./users";
-import { fileTypes } from "./schema";
+import { fileTypes, fileCategories } from "./schema"; // Importamos fileCategories
 import { Doc, Id } from "./_generated/dataModel";
 
 // Mutación para generar una URL de subida de archivo
@@ -10,7 +12,7 @@ export const generateUploadUrl = mutation(async (ctx) => {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {
     // Si no hay identidad, lanzar un error
-    throw new ConvexError("You no have access to this Org");
+    throw new ConvexError("You have no access to this Org");
   }
 
   // Generar y devolver la URL de subida
@@ -20,7 +22,6 @@ export const generateUploadUrl = mutation(async (ctx) => {
 // Función para verificar si un usuario tiene acceso a una organización
 async function hasAccessToOrg(
   ctx: QueryCtx | MutationCtx,
-  // tokenIdentifier: string,
   orgId: string
 ) {
   const identity = await ctx.auth.getUserIdentity();
@@ -49,7 +50,6 @@ async function hasAccessToOrg(
   }
 
   return { user };
-  // return hasAccess;
 }
 
 // Mutación para crear un archivo
@@ -59,12 +59,13 @@ export const createFile = mutation({
     fileId: v.id("_storage"),
     orgId: v.string(),
     type: fileTypes,
+    category: fileCategories // Agregamos category como un argumento
   },
   async handler(ctx, args) {
     const hasAccess = await hasAccessToOrg(ctx, args.orgId);
 
     if (!hasAccess) {
-      throw new ConvexError("You no have access to this Org");
+      throw new ConvexError("You have no access to this Org");
     }
 
     // Insertar el archivo en la base de datos
@@ -73,7 +74,8 @@ export const createFile = mutation({
       orgId: args.orgId,
       fileId: args.fileId,
       type: args.type,
-      userId: hasAccess.user._id
+      userId: hasAccess.user._id,
+      category: args.category // Incluimos category en la inserción
     });
   },
 });
@@ -86,6 +88,7 @@ export const getFiles = query({
     favorites: v.optional(v.boolean()),
     deletedOnly: v.optional(v.boolean()),
     type: v.optional(fileTypes),
+    category: v.optional(fileCategories) // Añadimos category como argumento opcional
   },
   async handler(ctx, args) {
     const hasAccess = await hasAccessToOrg(ctx, args.orgId);
@@ -121,21 +124,23 @@ export const getFiles = query({
       );
     }
 
-
     if (args.deletedOnly) {
       files = files.filter((file) => file.shouldDelete);
     } else {
       files = files.filter((file) => !file.shouldDelete);
     }
 
-    if(args.type){
+    if (args.type) {
       files = files.filter((file) => file.type === args.type);
+    }
+
+    if (args.category) {
+      files = files.filter((file) => file.category === args.category); // Filtramos por category si está presente en los argumentos
     }
 
     return files;
   },
 });
-
 
 export const deleteAllFiles = internalMutation({
   args: {},
@@ -154,14 +159,13 @@ export const deleteAllFiles = internalMutation({
   },
 })
 
-
 function assertCanDeleteFile(user: Doc<"users">, file: Doc<"files">) {
   const canDelete =
     file.userId === user._id ||
     user.orgIds.find((org) => org.orgId === file.orgId)?.role === "admin";
 
   if (!canDelete) {
-    throw new ConvexError("you have no acces to delete this file");
+    throw new ConvexError("You have no access to delete this file");
   }
 }
 
@@ -171,7 +175,7 @@ export const deleteFile = mutation({
     const access = await hasAccessToFile(ctx, args.fileId);
 
     if (!access) {
-      throw new ConvexError("no access to file");
+      throw new ConvexError("No access to file");
     }
 
     assertCanDeleteFile(access.user, access.file);
@@ -198,7 +202,6 @@ export const restoreFile = mutation({
     });
   },
 });
-
 
 // Consulta para obtener la URL de un archivo
 export const getFileUrl = query({
