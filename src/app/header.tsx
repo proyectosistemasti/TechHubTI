@@ -1,6 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { OrganizationSwitcher, SignInButton, SignOutButton, UserButton } from "@clerk/nextjs";
-import { Organization } from "@clerk/nextjs/server";
+import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import Image from "next/image"
 import Link from "next/link";
 
@@ -20,16 +18,6 @@ export function Header() {
         <div className="flex gap-2">
           <OrganizationSwitcher />
           <UserButton />
-          {/* <SignOutButton>
-            <Button>
-              Sign Out
-            </Button>
-          </SignOutButton>
-          <SignInButton>
-            <Button>
-              Sign In
-            </Button>
-          </SignInButton> */}
         </div>
       </div>
     </div>

@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-// import "./globals.css";
 import "../globals.css";
-// import ConvexClientProvider from "./ConvexClientProvider";
 import ConvexClientProvider from '../ConvexClientProvider';
-// import { Header } from "./header";
 import { Header } from "../header";
 import { Toaster } from "@/components/ui/toaster";
-// import { Footer } from "./footer";
 import { Footer } from "../footer";
 import { SideNav } from "./side-nav";
 
@@ -37,8 +33,8 @@ export default function RootLayout({
               </div>
             </div>
           </main>
-          <Footer />
         </ConvexClientProvider>
+          <Footer />
       </body>
     </html>
   );
