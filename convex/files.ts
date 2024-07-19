@@ -3,21 +3,8 @@
 import { ConvexError, v } from "convex/values";
 import { internalMutation, mutation, MutationCtx, query, QueryCtx } from "./_generated/server";
 import { getUser } from "./users";
-import { fileTypes, fileCategories } from "./schema"; // Importamos fileCategories
+import { fileTypes, fileCategories } from "./schema";
 import { Doc, Id } from "./_generated/dataModel";
-
-// Mutación para generar una URL de subida de archivo
-export const generateUploadUrl = mutation(async (ctx) => {
-  // Obtener la identidad del usuario
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity) {
-    // Si no hay identidad, lanzar un error
-    throw new ConvexError("You have no access to this Org");
-  }
-
-  // Generar y devolver la URL de subida
-  return await ctx.storage.generateUploadUrl();
-});
 
 // Función para verificar si un usuario tiene acceso a una organización
 async function hasAccessToOrg(
@@ -51,6 +38,19 @@ async function hasAccessToOrg(
 
   return { user };
 }
+
+// Mutación para generar una URL de subida de archivo
+export const generateUploadUrl = mutation(async (ctx) => {
+  // Obtener la identidad del usuario
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) {
+    // Si no hay identidad, lanzar un error
+    throw new ConvexError("You have no access to this Org");
+  }
+
+  // Generar y devolver la URL de subida
+  return await ctx.storage.generateUploadUrl();
+});
 
 // Mutación para crear un archivo
 export const createFile = mutation({
@@ -142,22 +142,47 @@ export const getFiles = query({
   },
 });
 
+// Nueva consulta para obtener archivos por categoría
+export const getFilesByCategory = query({
+  args: {
+    orgId: v.string(),
+    category: fileCategories
+  },
+  async handler(ctx, args) {
+    const hasAccess = await hasAccessToOrg(ctx, args.orgId);
+
+    if (!hasAccess) {
+      return [];
+    }
+
+    const files = await ctx.db
+      .query("files")
+      .withIndex("by_orgId_category", (q) =>
+        q.eq("orgId", args.orgId).eq("category", args.category)
+      )
+      .collect();
+
+    return files;
+  },
+});
+
+
 export const deleteAllFiles = internalMutation({
   args: {},
   async handler(ctx) {
     const files = await ctx.db
-    .query("files")
-    .withIndex("by_shouldDelete", (q) => q.eq("shouldDelete", true))
-    .collect();
+      .query("files")
+      .withIndex("by_shouldDelete", (q) => q.eq("shouldDelete", true))
+      .collect();
 
     await Promise.all(
       files.map(async (file) => {
         await ctx.storage.delete(file.fileId);
         return await ctx.db.delete(file._id);
       })
-    )
+    );
   },
-})
+});
 
 function assertCanDeleteFile(user: Doc<"users">, file: Doc<"files">) {
   const canDelete =
