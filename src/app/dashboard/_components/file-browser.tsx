@@ -8,7 +8,7 @@ import { FileCard } from "@/app/dashboard/_components/file-card";
 import Image from "next/image";
 import { SearchBar } from "./search-bar";
 import { useState } from "react";
-import { Grid2X2, GridIcon, Loader2, RowsIcon, TableIcon } from "lucide-react";
+import { GridIcon, Loader2, RowsIcon, TableIcon } from "lucide-react";
 import { DataTable } from "./file-table";
 import { columns } from "./columns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -69,13 +69,13 @@ export function FileBrowser({
     api.files.getFiles,
     orgId
       ? {
-          orgId,
-          type: type === "all" ? undefined : type,
-          query,
-          favorites: favoritesOnly,
-          deletedOnly,
-          category, // Añadir la categoría a los parámetros de la consulta
-        }
+        orgId,
+        type: type === "all" ? undefined : type,
+        query,
+        favorites: favoritesOnly,
+        deletedOnly,
+        category, // Añadir la categoría a los parámetros de la consulta
+      }
       : "skip"
   );
 
@@ -89,17 +89,18 @@ export function FileBrowser({
       ),
     })) ?? [];
 
+  // file-browser.tsx
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col md:flex-row items-center justify-between mb-8">
         <h1 className="text-4xl font-bold">{title}</h1>
         <SearchBar query={query} setQuery={setQuery} />
         <UploadButton />
       </div>
 
       <Tabs defaultValue="grid">
-        <div className="flex justify-between items-center">
-          <TabsList className="mb-2">
+        <div className="flex flex-col md:flex-row justify-between items-center">
+          <TabsList className="mb-2 flex flex-wrap gap-2">
             <TabsTrigger value="grid" className="flex gap-2 items-center">
               <GridIcon />
               Grid
@@ -109,7 +110,7 @@ export function FileBrowser({
               Table
             </TabsTrigger>
           </TabsList>
-          <div className="flex gap-2 items-center">
+          <div className="flex flex-col md:flex-row gap-2 items-center">
             <Label htmlFor="type-select">Type Filter</Label>
             <Select
               value={type}
@@ -136,7 +137,7 @@ export function FileBrowser({
           </div>
         )}
         <TabsContent value="grid">
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {modifiedFiles?.map((file) => {
               return <FileCard key={file._id} file={file} />;
             })}
@@ -150,4 +151,5 @@ export function FileBrowser({
       {files?.length === 0 && <PlaceHolder />}
     </div>
   );
+
 }

@@ -164,7 +164,7 @@ export function FileCardActions({ file, fileUrl, isFavorited }: { file: Doc<"fil
 }
 
 // Componente para mostrar la tarjeta del archivo
-export function FileCard({ file }: { file: Doc<"files"> & {isFavorited: boolean}}) {
+export function FileCard({ file }: { file: Doc<"files"> & { isFavorited: boolean } }) {
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const url = useQuery(api.files.getFileUrl, { fileId: file.fileId });
 
@@ -187,7 +187,8 @@ export function FileCard({ file }: { file: Doc<"files"> & {isFavorited: boolean}
   };
 
   return (
-    <Card>
+    // file-card.tsx
+    <Card className="flex flex-col">
       <CardHeader className="relative">
         <CardTitle className="flex items-center gap-2 text-base font-bold">
           <div className="flex justify-center">{typeIcons[file.type]}</div>
@@ -212,8 +213,8 @@ export function FileCard({ file }: { file: Doc<"files"> & {isFavorited: boolean}
           </div>
         )}
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <div className="flex items-center w-40 gap-2 text-xs text-neutral-600">
+      <CardFooter className="flex justify-between flex-col gap-2 md:flex-row">
+        <div className="flex items-center gap-2 text-xs text-neutral-600">
           <Avatar className="w-7 h-7">
             <AvatarImage src={userProfile?.image} />
             <AvatarFallback>CN</AvatarFallback>
@@ -225,5 +226,6 @@ export function FileCard({ file }: { file: Doc<"files"> & {isFavorited: boolean}
         </div>
       </CardFooter>
     </Card>
+
   );
 }

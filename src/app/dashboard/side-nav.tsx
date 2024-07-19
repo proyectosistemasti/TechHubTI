@@ -1,5 +1,6 @@
-"use client";
-
+// side-nav.tsx
+'use client'
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 import Link from "next/link";
@@ -8,6 +9,7 @@ import { usePathname } from "next/navigation";
 
 export function SideNav() {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(true); // Toggle state
 
   const navItems = [
     { href: "/dashboard/files", label: "All Files", icon: FileIcon, colorClass: "text-blue-500", hoverClass: "hover:text-blue-500" },
@@ -21,7 +23,12 @@ export function SideNav() {
   ];
 
   return (
-    <div className="w-40 flex flex-col gap-4">
+    <div className={clsx(
+      "flex flex-col gap-4 md:w-64",
+      "md:w-64 w-full", // full width on mobile
+      { "hidden": !isOpen, "block": isOpen } // Toggle visibility
+    )}>
+      <Button onClick={() => setIsOpen(!isOpen)} className="md:hidden p-2">Toggle</Button>
       {navItems.map(({ href, label, icon: Icon, colorClass, hoverClass }) => (
         <Link key={href} href={href}>
           <Button

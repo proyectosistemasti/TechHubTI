@@ -26,15 +26,15 @@ export default function RootLayout({
           <Toaster />
           <Header />
           <main className="container pt-12 mx-auto">
-            <div className="flex gap-8">
+            <div className="flex flex-col md:flex-row gap-8">
               <SideNav />
-              <div className="w-full">
+              <div className="flex-1">
                 {children}
               </div>
             </div>
           </main>
-        </ConvexClientProvider>
           <Footer />
+        </ConvexClientProvider>
       </body>
     </html>
   );
