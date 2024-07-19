@@ -12,24 +12,28 @@ import Video from "@/_components/Video";
 import { Inter } from "@next/font/google";
 import Header from "@/_components/Header";
 import Footer from "@/_components/Footer";
+import { Providers } from "../provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (
     <>
-     <Header/>
-      <ScrollUp />
-      <Hero />
-      <Features />
-      <Video />
-      <Brands />
-      <AboutSectionOne />
-      <AboutSectionTwo />
-      <Testimonials />
-      <Pricing />
-      <Blog />
-      <Contact />
-      <Footer/>
+      <Providers>
+        <Header />
+        <ScrollUp />
+        <Hero />
+        <Features />
+        <Video />
+        <Brands />
+        <AboutSectionOne />
+        <AboutSectionTwo />
+        <Testimonials />
+        <Pricing />
+        <Blog />
+        <Contact />
+        <Footer />
+        {/* <ScrollToTop /> */}
+      </Providers>
     </>
   );
 }
