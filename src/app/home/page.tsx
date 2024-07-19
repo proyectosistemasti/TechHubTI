@@ -9,7 +9,7 @@ import Hero from "@/_components/Hero";
 import Pricing from "@/_components/Pricing";
 import Testimonials from "@/_components/Testimonials";
 import Video from "@/_components/Video";
-import { Inter } from "@next/font/google";
+import { Inter } from "next/font/google";
 import Header from "@/_components/Header";
 import Footer from "@/_components/Footer";
 import { Providers } from "../provider";

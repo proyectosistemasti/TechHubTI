@@ -2,7 +2,7 @@
 
 import { ConvexError, v } from "convex/values";
 import { internalMutation, mutation, MutationCtx, query, QueryCtx } from "./_generated/server";
-import { getUser } from "./users";
+// import { getUser } from "./users";
 import { fileTypes, fileCategories } from "./schema";
 import { Doc, Id } from "./_generated/dataModel";
 
@@ -310,3 +310,7 @@ async function hasAccessToFile(
 
   return { user: hasAccess.user, file };
 }
+
+
+
+
