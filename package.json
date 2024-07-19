@@ -13,7 +13,6 @@
     "@clerk/clerk-sdk-node": "^5.0.12",
     "@clerk/nextjs": "^5.1.5",
     "@hookform/resolvers": "^3.9.0",
-    "@next/font": "^14.2.5",
     "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.1",
