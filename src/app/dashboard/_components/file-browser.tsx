@@ -3,27 +3,24 @@
 import { api } from "../../../../convex/_generated/api";
 import { useOrganization, useUser } from "@clerk/clerk-react";
 import { useQuery } from "convex/react";
-// import { UploadButton } from "@/app/upload-button";
 import { UploadButton } from "./upload-button";
 import { FileCard } from "@/app/dashboard/_components/file-card";
 import Image from "next/image";
-// import { SearchBar } from "@/app/search-bar";
 import { SearchBar } from "./search-bar";
 import { useState } from "react";
 import { Grid2X2, GridIcon, Loader2, RowsIcon, TableIcon } from "lucide-react";
 import { DataTable } from "./file-table";
 import { columns } from "./columns";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import { Doc } from "../../../../convex/_generated/dataModel";
 import { Label } from "@/components/ui/label";
-
 
 function PlaceHolder() {
   return (
@@ -39,11 +36,20 @@ function PlaceHolder() {
       </div>
       <UploadButton />
     </div>
-  )
+  );
 }
 
-export function FileBrowser({ title, favoritesOnly, deletedOnly }: { title: string, favoritesOnly?: boolean, deletedOnly?: boolean }) {
-
+export function FileBrowser({
+  title,
+  favoritesOnly,
+  deletedOnly,
+  category,
+}: {
+  title: string;
+  favoritesOnly?: boolean;
+  deletedOnly?: boolean;
+  category?: Doc<"files">["category"];
+}) {
   const organization = useOrganization();
   const user = useUser();
   const [query, setQuery] = useState("");
@@ -57,20 +63,22 @@ export function FileBrowser({ title, favoritesOnly, deletedOnly }: { title: stri
   const favorites = useQuery(
     api.files.getAllFavorites,
     orgId ? { orgId } : "skip"
-  )
+  );
 
   const files = useQuery(
     api.files.getFiles,
     orgId
       ? {
-        orgId,
-        type: type === "all" ? undefined : type,
-        query,
-        favorites: favoritesOnly,
-        deletedOnly,
-      }
+          orgId,
+          type: type === "all" ? undefined : type,
+          query,
+          favorites: favoritesOnly,
+          deletedOnly,
+          category, // Añadir la categoría a los parámetros de la consulta
+        }
       : "skip"
   );
+
   const isLoading = files === undefined;
 
   const modifiedFiles =
@@ -91,10 +99,15 @@ export function FileBrowser({ title, favoritesOnly, deletedOnly }: { title: stri
 
       <Tabs defaultValue="grid">
         <div className="flex justify-between items-center">
-
           <TabsList className="mb-2">
-            <TabsTrigger value="grid" className="flex gap-2 items-center"><GridIcon />Grid</TabsTrigger>
-            <TabsTrigger value="table" className="flex gap-2 items-center"><RowsIcon />Table</TabsTrigger>
+            <TabsTrigger value="grid" className="flex gap-2 items-center">
+              <GridIcon />
+              Grid
+            </TabsTrigger>
+            <TabsTrigger value="table" className="flex gap-2 items-center">
+              <RowsIcon />
+              Table
+            </TabsTrigger>
           </TabsList>
           <div className="flex gap-2 items-center">
             <Label htmlFor="type-select">Type Filter</Label>
@@ -114,7 +127,6 @@ export function FileBrowser({ title, favoritesOnly, deletedOnly }: { title: stri
                 <SelectItem value="pdf">PDF</SelectItem>
               </SelectContent>
             </Select>
-
           </div>
         </div>
         {isLoading && (
@@ -126,9 +138,7 @@ export function FileBrowser({ title, favoritesOnly, deletedOnly }: { title: stri
         <TabsContent value="grid">
           <div className="grid grid-cols-4 gap-4">
             {modifiedFiles?.map((file) => {
-              return (
-                <FileCard key={file._id} file={file} />
-              );
+              return <FileCard key={file._id} file={file} />;
             })}
           </div>
         </TabsContent>
@@ -136,7 +146,6 @@ export function FileBrowser({ title, favoritesOnly, deletedOnly }: { title: stri
           <DataTable columns={columns} data={modifiedFiles} />
         </TabsContent>
       </Tabs>
-
 
       {files?.length === 0 && <PlaceHolder />}
     </div>

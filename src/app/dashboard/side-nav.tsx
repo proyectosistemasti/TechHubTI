@@ -34,7 +34,7 @@ export function SideNav() {
             <Icon
               className={clsx(
                 "transition-colors duration-300",
-                { [colorClass]: pathname.includes(href), [hoverClass]: false }
+                { [colorClass]: pathname.includes(href), [hoverClass]: true }
               )}
             />
             {label}
