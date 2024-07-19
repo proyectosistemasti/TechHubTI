@@ -149,7 +149,7 @@ const Header = () => {
                   </ul>
                 </nav>
               </div>
-
+              <ThemeToggler />
             </div>
           </div>
         </div>
