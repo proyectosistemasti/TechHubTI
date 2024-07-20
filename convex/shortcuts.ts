@@ -1,10 +1,8 @@
-// shortcuts.ts
-
 import { ConvexError, v } from "convex/values";
 import { mutation, query, MutationCtx, QueryCtx } from "./_generated/server";
 import { Doc, Id } from "./_generated/dataModel";
 
-// Función para verificar si un usuario tiene acceso a los accesos directos
+// Function to check if a user has access to shortcuts
 async function hasAccessToShortcuts(ctx: QueryCtx | MutationCtx) {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {
@@ -25,11 +23,13 @@ async function hasAccessToShortcuts(ctx: QueryCtx | MutationCtx) {
   return { user };
 }
 
-// Mutación para crear un acceso directo
+// Mutation to create a shortcut
 export const createShortcut = mutation({
   args: {
     url: v.string(),
+    title: v.string(), // Added title
     description: v.optional(v.string()),
+    password: v.optional(v.string()), // Added optional password
   },
   async handler(ctx, args) {
     const access = await hasAccessToShortcuts(ctx);
@@ -40,13 +40,15 @@ export const createShortcut = mutation({
 
     await ctx.db.insert("shortcuts", {
       url: args.url,
+      title: args.title, // Include title
       description: args.description,
+      password: args.password, // Include optional password
       userId: access.user._id,
     });
   },
 });
 
-// Consulta para obtener accesos directos
+// Query to get shortcuts
 export const getShortcuts = query(async (ctx) => {
   const access = await hasAccessToShortcuts(ctx);
 
@@ -62,12 +64,14 @@ export const getShortcuts = query(async (ctx) => {
   return shortcuts;
 });
 
-// Mutación para actualizar un acceso directo
+// Mutation to update a shortcut
 export const updateShortcut = mutation({
   args: {
     shortcutId: v.id("shortcuts"),
     url: v.string(),
+    title: v.string(), // Added title
     description: v.optional(v.string()),
+    password: v.optional(v.string()), // Added optional password
   },
   async handler(ctx, args) {
     const access = await hasAccessToShortcuts(ctx);
@@ -84,12 +88,14 @@ export const updateShortcut = mutation({
 
     await ctx.db.patch(args.shortcutId, {
       url: args.url,
+      title: args.title, // Update title
       description: args.description,
+      password: args.password, // Update optional password
     });
   },
 });
 
-// Mutación para eliminar un acceso directo
+// Mutation to delete a shortcut
 export const deleteShortcut = mutation({
   args: { shortcutId: v.id("shortcuts") },
   async handler(ctx, args) {
