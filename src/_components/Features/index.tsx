@@ -11,8 +11,8 @@ const Features = () => {
       >
         <div className="container">
           <SectionTitle
-            title="Main Features"
-            paragraph="There are many variations of passages of Lorem Ipsum available but the majority have suffered alteration in some form."
+            title="Accesos Directos"
+            paragraph="Estos accesos son para ingresar a la distintas páginas web donde se realizan ciertas actividades del departamento"
             center
           />
 
