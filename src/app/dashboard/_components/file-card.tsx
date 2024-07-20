@@ -187,7 +187,6 @@ export function FileCard({ file }: { file: Doc<"files"> & { isFavorited: boolean
   };
 
   return (
-    // file-card.tsx
     <Card className="flex flex-col">
       <CardHeader className="relative">
         <CardTitle className="flex items-center gap-2 text-base font-bold">

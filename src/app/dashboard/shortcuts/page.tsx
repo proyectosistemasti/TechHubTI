@@ -2,8 +2,7 @@
 
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api"; // Ajusta la ruta según sea necesario
-import { ShortcutActions } from "./_components/shortcuts_component";
-import { ShortcutsComponent } from "./_components/shortcuts_component"; // Asegúrate de que la ruta sea correcta
+import { ShortcutComponent} from "./_components/ShortcutComponent"
 import { Id } from "../../../../convex/_generated/dataModel"; // Ajusta la ruta según sea necesario
 
 // Define el tipo para un acceso directo
@@ -11,9 +10,10 @@ interface Shortcut {
   _id: Id<"shortcuts">;
   url: string;
   description?: string;
-  title?: string;
+  title: string; // Cambiado a 'title' porque 'title' debería ser requerido
   password?: string;
   userId: Id<"users">;
+  _creationTime: Date; // Añadido para coincidir con el uso en el componente
 }
 
 export default function ShortcutsPage() {
@@ -30,27 +30,17 @@ export default function ShortcutsPage() {
   }
 
   // Extraer datos de la consulta
-  const shortcuts: Shortcut[] = Array.isArray(queryResult) ? queryResult : [];
+  const shortcuts: Shortcut[] = Array.isArray(queryResult)
+    ? queryResult.map(shortcut => ({
+        ...shortcut,
+        _creationTime: new Date(shortcut._creationTime) // Convertir el timestamp a Date
+      }))
+    : [];
 
   return (
     <div className="p-4">
-      {/* Componente para añadir un nuevo shortcut */}
-      <ShortcutsComponent />
-
-      {/* Renderizar los shortcuts existentes */}
-      <div className="mt-4">
-        {shortcuts.length === 0 ? (
-          <div>No shortcuts found</div>
-        ) : (
-          shortcuts.map((shortcut: Shortcut) => (
-            <div key={shortcut._id.toString()} className="mb-4 p-4 border border-gray-300 rounded-md shadow-sm">
-              <h2 className="text-xl font-semibold">{shortcut.title || "No Title"}</h2>
-              <p>{shortcut.description || "No description"}</p>
-              <ShortcutActions shortcut={shortcut} />
-            </div>
-          ))
-        )}
-      </div>
+      {/* Componente para gestionar y mostrar accesos directos */}
+      <ShortcutComponent/>
     </div>
   );
 }
