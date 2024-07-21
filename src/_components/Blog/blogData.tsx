@@ -3,44 +3,86 @@ import { Blog } from "@/types/blog";
 const blogData: Blog[] = [
   {
     id: 1,
-    title: "Best UI components for modern websites",
+    title: "Rigoberto Gómez Rodríguez",
     paragraph:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
+      "Encargado de la Jefatura de Operaciones TI",
     image: "/images/blog/blog-01.jpg",
     author: {
-      name: "Samuyl Joshi",
+      name: "Rigoberto Gómez Rodríguez",
       image: "/images/blog/author-01.png",
       designation: "Graphic Designer",
     },
-    tags: ["creative"],
+    tags: ["Jefatura"],
     publishDate: "2025",
   },
   {
     id: 2,
-    title: "9 simple ways to improve your design skills",
+    title: "Leonardo Balderas ",
     paragraph:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
+      "Colaborador del departamento de sistemas.",
     image: "/images/blog/blog-02.jpg",
     author: {
-      name: "Musharof Chy",
+      name: "Leonardo Balderas",
       image: "/images/blog/author-02.png",
       designation: "Content Writer",
     },
-    tags: ["computer"],
+    tags: ["Colaborador"],
     publishDate: "2025",
   },
   {
     id: 3,
-    title: "Tips to quickly improve your coding speed.",
+    title: "Gustabo Marcos Niño",
     paragraph:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
+      "Colaborador del departamento de sistemas.",
     image: "/images/blog/blog-03.jpg",
     author: {
       name: "Lethium Deo",
       image: "/images/blog/author-03.png",
       designation: "Graphic Designer",
     },
-    tags: ["design"],
+    tags: ["Colaborador"],
+    publishDate: "2025",
+  },
+  {
+    id: 3,
+    title: "José Esaú Palacios Herrera",
+    paragraph:
+      "Colaborador del departamento de sistemas.",
+    image: "/images/blog/blog-03.jpg",
+    author: {
+      name: "Lethium Deo",
+      image: "/images/blog/author-03.png",
+      designation: "Graphic Designer",
+    },
+    tags: ["Colaborador"],
+    publishDate: "2025",
+  },
+  {
+    id: 3,
+    title: "Francisco ",
+    paragraph:
+      "Colaborador del departamento de sistemas.",
+    image: "/images/blog/blog-03.jpg",
+    author: {
+      name: "Lethium Deo",
+      image: "/images/blog/author-03.png",
+      designation: "Graphic Designer",
+    },
+    tags: ["Colaborador"],
+    publishDate: "2025",
+  },
+  {
+    id: 3,
+    title: "José Alfredo",
+    paragraph:
+      "Colaborador del departamento de sistemas.",
+    image: "/images/blog/blog-03.jpg",
+    author: {
+      name: "Lethium Deo",
+      image: "/images/blog/author-03.png",
+      designation: "Graphic Designer",
+    },
+    tags: ["Colaborador"],
     publishDate: "2025",
   },
 ];
