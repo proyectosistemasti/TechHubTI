@@ -10,7 +10,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="dark:bg-black">
+      <body >
         {children}
         <ScrollToTop />
       </body>
