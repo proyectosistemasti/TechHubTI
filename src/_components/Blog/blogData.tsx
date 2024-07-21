@@ -45,7 +45,7 @@ const blogData: Blog[] = [
   },
   {
     id: 3,
-    title: "José Esaú Palacios Herrera",
+    title: "José Esaú Palacios",
     paragraph:
       "Colaborador del departamento de sistemas.",
     image: "/images/blog/blog-03.jpg",
