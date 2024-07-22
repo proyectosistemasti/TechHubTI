@@ -7,8 +7,8 @@ const Blog = () => {
     <section id="blog" className="bg-primary/5 py-16 md:py-20 lg:py-28">
       <div className="container">
         <SectionTitle
-          title="Our Latest Blogs"
-          paragraph="There are many variations of passages of Lorem Ipsum available but the majority have suffered alteration in some form."
+          title="Equipo de trabajo"
+          paragraph="Nuestro departamento está conformado por 6 colaboradores incluyendo la Jefatura de HXA, nuestro horario esta dividido en  3 turnos que se encuentran distrubuidos de la siguiente manera: de 8:00 am a 4:00 pm, de 3:00 pm a 11:00 pm y de 10:00 pm a 6:00 am."
           center
         />
 

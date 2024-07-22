@@ -1,12 +1,13 @@
+'use client';
+
 import { useState } from "react";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -15,17 +16,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Eye, EyeOff, MoreVertical, TrashIcon, Edit2, GridIcon, RowsIcon } from 'lucide-react';
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Eye, EyeOff, Edit2, TrashIcon, MoreVertical } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Id } from "../../../../../convex/_generated/dataModel";
 import { formatRelative } from "date-fns";
-import Link from 'next/link';
+import Link from "next/link";
 
 interface Shortcut {
   _id: Id<"shortcuts">;
@@ -37,13 +35,14 @@ interface Shortcut {
   _creationTime: Date;
 }
 
-export function ShortcutComponent() {
+interface ShortcutComponentProps {
+  shortcuts: Shortcut[];
+}
+
+export function ShortcutComponent({ shortcuts }: ShortcutComponentProps) {
   const createShortcut = useMutation(api.shortcuts.createShortcut);
   const deleteShortcut = useMutation(api.shortcuts.deleteShortcut);
   const updateShortcut = useMutation(api.shortcuts.updateShortcut);
-
-  const queryResult = useQuery(api.shortcuts.getShortcuts);
-
   const { toast } = useToast();
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [url, setUrl] = useState("");
@@ -51,19 +50,10 @@ export function ShortcutComponent() {
   const [description, setDescription] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editShortcut, setEditShortcut] = useState<Shortcut | null>(null);
-
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-
-  // Convertir _creationTime de number a Date
-  const shortcuts = Array.isArray(queryResult)
-    ? queryResult.map(shortcut => ({
-      ...shortcut,
-      _creationTime: new Date(shortcut._creationTime),
-    }))
-    : [];
+  const [tab, setTab] = useState("list");
 
   function normalizeUrl(url: string): string {
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
@@ -73,15 +63,15 @@ export function ShortcutComponent() {
   }
 
   return (
-    <div className="p-4">
+    <div>
       {/* Add Shortcut Dialog */}
       <AlertDialog open={isAddOpen} onOpenChange={setIsAddOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Add Shortcut</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogAction>
               Provide the URL, title, description, and optional password for the new shortcut.
-            </AlertDialogDescription>
+            </AlertDialogAction>
           </AlertDialogHeader>
           <div className="p-4">
             <label className="block mb-2">
@@ -136,7 +126,7 @@ export function ShortcutComponent() {
             <AlertDialogAction
               onClick={async () => {
                 await createShortcut({
-                  url,
+                  url: normalizeUrl(url),
                   title,
                   description,
                   password
@@ -164,9 +154,9 @@ export function ShortcutComponent() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Edit Shortcut</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogAction>
               Modify the title, description, and password for this shortcut.
-            </AlertDialogDescription>
+            </AlertDialogAction>
           </AlertDialogHeader>
           <div className="p-4">
             <label className="block mb-2">
@@ -175,7 +165,7 @@ export function ShortcutComponent() {
                 value={editShortcut?.url || ""}
                 onChange={(e) => {
                   if (editShortcut) {
-                    setEditShortcut({ ...editShortcut, url: e.target.value });
+                    setEditShortcut({ ...editShortcut, url: normalizeUrl(e.target.value) });
                   }
                 }}
                 className="mt-1"
@@ -263,9 +253,9 @@ export function ShortcutComponent() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogAction>
               Are you sure you want to delete this shortcut?
-            </AlertDialogDescription>
+            </AlertDialogAction>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={() => setIsConfirmOpen(false)}>Cancel</AlertDialogCancel>
@@ -278,9 +268,9 @@ export function ShortcutComponent() {
                     title: "Shortcut deleted",
                     description: "The shortcut was deleted successfully.",
                   });
+                  setIsConfirmOpen(false);
+                  setEditShortcut(null);
                 }
-                setIsConfirmOpen(false);
-                setEditShortcut(null);
               }}
             >
               Delete
@@ -289,67 +279,110 @@ export function ShortcutComponent() {
         </AlertDialogContent>
       </AlertDialog>
 
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Shortcuts</h1>
-        <Button onClick={() => setIsAddOpen(true)}>Add Shortcut</Button>
-      </div>
+      {/* Tabs for List and Grid Views */}
+      <Tabs value={tab} onValueChange={setTab} className="mb-4">
+        <TabsList className="mb-2 gap-2">
+          <TabsTrigger className="gap-2" value="list"><RowsIcon/> Table</TabsTrigger>
+          <TabsTrigger className="gap-2" value="grid"><GridIcon/> Grid</TabsTrigger>
+        </TabsList>
+        <TabsContent value="list">
+          <Table>
+            <TableCaption>A list of your shortcuts.</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Title</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead>URL</TableHead>
+                <TableHead>Created At</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {shortcuts.map((shortcut) => (
+                <TableRow key={shortcut._id}>
+                  <TableCell>{shortcut.title}</TableCell>
+                  <TableCell>{shortcut.description}</TableCell>
+                  <TableCell>
+                    <a href={normalizeUrl(shortcut.url)} target="_blank" rel="noopener noreferrer">
+                      {normalizeUrl(shortcut.url)}
+                    </a>
+                  </TableCell>
+                  <TableCell>{formatRelative(shortcut._creationTime, new Date())}</TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" size="icon">
+                          <MoreVertical />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            setEditShortcut(shortcut);
+                            setIsEditOpen(true);
+                          }}
+                        >
+                          <Edit2 className="w-4 h-4 mr-2" />
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            setEditShortcut(shortcut);
+                            setIsConfirmOpen(true);
+                          }}
+                        >
+                          <TrashIcon className="w-4 h-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TabsContent>
+        <TabsContent value="grid">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {shortcuts.map((shortcut) => (
+              <Card key={shortcut._id}>
+                <CardHeader>
+                  <CardTitle>{shortcut.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>{shortcut.description}</p>
+                  <Link href={normalizeUrl(shortcut.url)} target="_blank">
+                    {normalizeUrl(shortcut.url)}
+                  </Link>
+                </CardContent>
+                <CardFooter>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setEditShortcut(shortcut);
+                      setIsEditOpen(true);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outline"
+                    color="red"
+                    onClick={() => {
+                      setEditShortcut(shortcut);
+                      setIsConfirmOpen(true);
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {shortcuts.map((shortcut) => (
-          <Card key={shortcut._id.toString()} className="relative overflow-hidden border border-gray-200 shadow-md rounded-lg">
-            <CardHeader className="flex justify-between items-start p-4 bg-gray-50">
-              <div>
-                <CardTitle className="text-lg font-semibold text-gray-800">{shortcut.title}</CardTitle>
-                <p className="text-sm text-gray-500">{formatRelative(shortcut._creationTime, new Date())}</p>
-              </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="p-2 text-gray-500 absolute top-2 right-2">
-                    <MoreVertical className="w-5 h-5" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => {
-                    setEditShortcut(shortcut);
-                    setIsEditOpen(true);
-                  }}>
-                    <Edit2 className="mr-2 w-4 h-4" /> Edit
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => {
-                    setEditShortcut(shortcut);
-                    setIsConfirmOpen(true);
-                  }}>
-                    <TrashIcon className="mr-2 w-4 h-4" /> Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </CardHeader>
-            <CardContent className="p-4 bg-white">
-              <p className="text-sm mb-2 text-gray-700 line-clamp-2">{shortcut.description}</p>
-              <Link href={normalizeUrl(shortcut.url)} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline break-all block truncate">
-                {shortcut.url}
-              </Link>
-              {shortcut.password && (
-                <div className="flex items-center mt-2">
-                  <span className="font-semibold mr-2">Password:</span>
-                  <Input
-                    type={showPassword ? "text" : "password"}
-                    value={shortcut.password}
-                    readOnly
-                    className="mr-2"
-                  />
-                  <Button variant="ghost" onClick={() => setShowPassword(!showPassword)} className="p-2 text-gray-500">
-                    {showPassword ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-            <CardFooter className="p-4 bg-gray-50">
-              <p className="text-sm text-gray-500">{formatRelative(shortcut._creationTime, new Date())}</p>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+      <Button onClick={() => setIsAddOpen(true)}>Add Shortcut</Button>
     </div>
   );
 }

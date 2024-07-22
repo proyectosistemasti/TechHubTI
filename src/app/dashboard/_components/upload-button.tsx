@@ -30,7 +30,7 @@ const formSchema = z.object({
   title: z.string().min(1).max(200),
   file: z.custom<FileList>((val) => val instanceof FileList, "Required")
     .refine((files) => files.length > 0, "Required"),
-  category: z.enum([...fileCategories, ]) // Allow undefined as a valid option
+  category: z.enum(fileCategories).optional() // Allow undefined as a valid option
 });
 
 export function UploadButton() {
@@ -61,7 +61,7 @@ export function UploadButton() {
 
     if (!orgId) return;
 
-    setIsLoading(true); // Activate loading state
+    setIsLoading(true);
 
     try {
       const postUrl = await generateUploadUrl();
@@ -77,7 +77,6 @@ export function UploadButton() {
 
       const { storageId } = await result.json();
 
-      // Map file types to specific types in the schema
       const types = {
         "image/png": "image",
         "image/jpg": "image",
@@ -91,13 +90,24 @@ export function UploadButton() {
 
       const fileTypeKey = types[fileType];
 
+      // Validar si es un archivo de tipo schedule
+      if (values.category === "schedule" && !fileType.startsWith("image/")) {
+        toast({
+          variant: "destructive",
+          title: "Invalid file type",
+          description: "Schedule files must be images.",
+        });
+        setIsLoading(false);
+        return;
+      }
+
       try {
         await createFile({
           name: values.title,
           fileId: storageId,
           orgId,
           type: fileTypeKey,
-          category: values.category as FileCategory // Ensure category matches the specific type
+          category: values.category as FileCategory
         });
 
         form.reset();
@@ -115,7 +125,7 @@ export function UploadButton() {
           description: "Your file could not be uploaded, try again later"
         });
       } finally {
-        setIsLoading(false); // Deactivate loading state
+        setIsLoading(false);
       }
     } catch (error) {
       toast({
@@ -123,10 +133,10 @@ export function UploadButton() {
         title: "Something went wrong",
         description: "An error occurred while uploading, try again later"
       });
-      setIsLoading(false); // Deactivate loading state on error
+      setIsLoading(false);
     }
   }
-
+  
   return (
     <Dialog
       open={isFileDialogOpen}

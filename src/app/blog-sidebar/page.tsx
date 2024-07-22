@@ -30,7 +30,7 @@ const BlogSidebarPage = () => {
                       </div>
                       <div className="w-full">
                         <h4 className="mb-1 text-base font-medium text-body-color">
-                          By
+                      
                           <span> Musharof Chy</span>
                         </h4>
                       </div>

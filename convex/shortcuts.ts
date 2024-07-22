@@ -3,7 +3,7 @@ import { mutation, query, MutationCtx, QueryCtx } from "./_generated/server";
 import { Doc, Id } from "./_generated/dataModel";
 
 // Function to check if a user has access to shortcuts
-async function hasAccessToShortcuts(ctx: QueryCtx | MutationCtx) {
+async function getUserAndOrg(ctx: QueryCtx | MutationCtx) {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {
     return null;
@@ -20,19 +20,26 @@ async function hasAccessToShortcuts(ctx: QueryCtx | MutationCtx) {
     return null;
   }
 
-  return { user };
+  // Assuming the user is part of one organization, take the first one
+  const orgId = user.orgIds.length > 0 ? user.orgIds[0].orgId : null;
+
+  if (!orgId) {
+    return null;
+  }
+
+  return { user, orgId };
 }
 
 // Mutation to create a shortcut
 export const createShortcut = mutation({
   args: {
     url: v.string(),
-    title: v.string(), // Added title
+    title: v.string(),
     description: v.optional(v.string()),
-    password: v.optional(v.string()), // Added optional password
+    password: v.optional(v.string()),
   },
   async handler(ctx, args) {
-    const access = await hasAccessToShortcuts(ctx);
+    const access = await getUserAndOrg(ctx);
 
     if (!access) {
       throw new ConvexError("No access");
@@ -40,17 +47,18 @@ export const createShortcut = mutation({
 
     await ctx.db.insert("shortcuts", {
       url: args.url,
-      title: args.title, // Include title
+      title: args.title,
       description: args.description,
-      password: args.password, // Include optional password
+      password: args.password,
       userId: access.user._id,
+      orgId: access.orgId, // Add orgId here
     });
   },
 });
 
 // Query to get shortcuts
 export const getShortcuts = query(async (ctx) => {
-  const access = await hasAccessToShortcuts(ctx);
+  const access = await getUserAndOrg(ctx);
 
   if (!access) {
     return [];
@@ -58,7 +66,7 @@ export const getShortcuts = query(async (ctx) => {
 
   const shortcuts = await ctx.db
     .query("shortcuts")
-    .withIndex("by_userId", (q) => q.eq("userId", access.user._id))
+    .withIndex("by_orgId", (q) => q.eq("orgId", access.orgId)) // Query by orgId instead of userId
     .collect();
 
   return shortcuts;
@@ -69,12 +77,12 @@ export const updateShortcut = mutation({
   args: {
     shortcutId: v.id("shortcuts"),
     url: v.string(),
-    title: v.string(), // Added title
+    title: v.string(),
     description: v.optional(v.string()),
-    password: v.optional(v.string()), // Added optional password
+    password: v.optional(v.string()),
   },
   async handler(ctx, args) {
-    const access = await hasAccessToShortcuts(ctx);
+    const access = await getUserAndOrg(ctx);
 
     if (!access) {
       throw new ConvexError("No access");
@@ -82,15 +90,15 @@ export const updateShortcut = mutation({
 
     const shortcut = await ctx.db.get(args.shortcutId);
 
-    if (!shortcut || shortcut.userId !== access.user._id) {
-      throw new ConvexError("No access to update this shortcut");
+    if (!shortcut) {
+      throw new ConvexError("Shortcut not found");
     }
 
     await ctx.db.patch(args.shortcutId, {
       url: args.url,
-      title: args.title, // Update title
+      title: args.title,
       description: args.description,
-      password: args.password, // Update optional password
+      password: args.password,
     });
   },
 });
@@ -99,7 +107,7 @@ export const updateShortcut = mutation({
 export const deleteShortcut = mutation({
   args: { shortcutId: v.id("shortcuts") },
   async handler(ctx, args) {
-    const access = await hasAccessToShortcuts(ctx);
+    const access = await getUserAndOrg(ctx);
 
     if (!access) {
       throw new ConvexError("No access");
@@ -107,8 +115,8 @@ export const deleteShortcut = mutation({
 
     const shortcut = await ctx.db.get(args.shortcutId);
 
-    if (!shortcut || shortcut.userId !== access.user._id) {
-      throw new ConvexError("No access to delete this shortcut");
+    if (!shortcut) {
+      throw new ConvexError("Shortcut not found");
     }
 
     await ctx.db.delete(args.shortcutId);
