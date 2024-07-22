@@ -10,7 +10,7 @@ const blogData: Blog[] = [
     author: {
       name: "Rigoberto Gómez Rodríguez",
       image: "/images/blog/author-01.png",
-      designation: "Graphic Designer",
+      designation: "Jefatura",
     },
     tags: ["Jefatura"],
     publishDate: "2025",
@@ -24,7 +24,7 @@ const blogData: Blog[] = [
     author: {
       name: "Leonardo Balderas",
       image: "/images/blog/author-02.png",
-      designation: "Content Writer",
+      designation: "Colaborador",
     },
     tags: ["Colaborador"],
     publishDate: "2025",
@@ -38,7 +38,7 @@ const blogData: Blog[] = [
     author: {
       name: "Lethium Deo",
       image: "/images/blog/author-03.png",
-      designation: "Graphic Designer",
+      designation: "Colaborador",
     },
     tags: ["Colaborador"],
     publishDate: "2025",
@@ -52,7 +52,7 @@ const blogData: Blog[] = [
     author: {
       name: "Lethium Deo",
       image: "/images/blog/author-03.png",
-      designation: "Graphic Designer",
+      designation: "Colaborador",
     },
     tags: ["Colaborador"],
     publishDate: "2025",
@@ -66,7 +66,7 @@ const blogData: Blog[] = [
     author: {
       name: "Lethium Deo",
       image: "/images/blog/author-03.png",
-      designation: "Graphic Designer",
+      designation: "Colaborador",
     },
     tags: ["Colaborador"],
     publishDate: "2025",
@@ -80,7 +80,7 @@ const blogData: Blog[] = [
     author: {
       name: "Lethium Deo",
       image: "/images/blog/author-03.png",
-      designation: "Graphic Designer",
+      designation: "Colaborador",
     },
     tags: ["Colaborador"],
     publishDate: "2025",
