@@ -28,10 +28,12 @@ export default defineSchema({
     userId: v.id("users"),
     shouldDelete: v.optional(v.boolean()),
     category: fileCategories,
+    uploadedAt: v.optional(v.number()), // Agregamos un campo para la marca de tiempo
   })
     .index("by_orgId", ["orgId"])
     .index("by_shouldDelete", ["shouldDelete"])
-    .index("by_orgId_category", ["orgId", "category"]),
+    .index("by_orgId_category", ["orgId", "category"])
+    .index("by_category", ["category"]),
 
   favorites: defineTable({
     fileId: v.id("files"),

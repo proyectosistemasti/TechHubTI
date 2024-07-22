@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { Eye, EyeOff, MoreVertical, TrashIcon, Edit2 } from "lucide-react";
+import { Eye, EyeOff, MoreVertical, TrashIcon, Edit2, GridIcon, RowsIcon } from 'lucide-react';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -281,9 +281,9 @@ export function ShortcutComponent({ shortcuts }: ShortcutComponentProps) {
 
       {/* Tabs for List and Grid Views */}
       <Tabs value={tab} onValueChange={setTab} className="mb-4">
-        <TabsList>
-          <TabsTrigger value="list">List</TabsTrigger>
-          <TabsTrigger value="grid">Grid</TabsTrigger>
+        <TabsList className="mb-2 gap-2">
+          <TabsTrigger className="gap-2" value="list"><RowsIcon/> Table</TabsTrigger>
+          <TabsTrigger className="gap-2" value="grid"><GridIcon/> Grid</TabsTrigger>
         </TabsList>
         <TabsContent value="list">
           <Table>

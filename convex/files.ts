@@ -52,14 +52,13 @@ export const generateUploadUrl = mutation(async (ctx) => {
   return await ctx.storage.generateUploadUrl();
 });
 
-// Mutación para crear un archivo
 export const createFile = mutation({
   args: {
     name: v.string(),
     fileId: v.id("_storage"),
     orgId: v.string(),
     type: fileTypes,
-    category: fileCategories // Agregamos category como un argumento
+    category: fileCategories
   },
   async handler(ctx, args) {
     const hasAccess = await hasAccessToOrg(ctx, args.orgId);
@@ -68,17 +67,39 @@ export const createFile = mutation({
       throw new ConvexError("You have no access to this Org");
     }
 
-    // Insertar el archivo en la base de datos
+    // Validar si es un archivo de tipo schedule
+    if (args.category === "schedule") {
+      // Verificar si ya existe un archivo de tipo schedule
+      const existingSchedule = await ctx.db
+        .query("files")
+        .withIndex("by_orgId_category", q =>
+          q.eq("orgId", args.orgId).eq("category", "schedule")
+        )
+        .first();
+
+      if (existingSchedule) {
+        throw new ConvexError("Only one schedule file is allowed.");
+      }
+
+      // Verificar que el archivo sea una imagen
+      if (args.type !== "image") {
+        throw new ConvexError("Schedule files must be images.");
+      }
+    }
+
     await ctx.db.insert("files", {
       name: args.name,
       orgId: args.orgId,
       fileId: args.fileId,
       type: args.type,
       userId: hasAccess.user._id,
-      category: args.category // Incluimos category en la inserción
+      category: args.category,
+      uploadedAt: Date.now(), // Guardamos la marca de tiempo
     });
   },
 });
+
+
 
 // Consulta para obtener archivos de una organización
 export const getFiles = query({
@@ -314,3 +335,19 @@ async function hasAccessToFile(
 
 
 
+export const deleteScheduleFiles = internalMutation({
+  args: {},
+  async handler(ctx) {
+    const scheduleFiles = await ctx.db
+      .query("files")
+      .withIndex("by_category", (q) => q.eq("category", "schedule"))
+      .collect();
+
+    await Promise.all(
+      scheduleFiles.map(async (file) => {
+        await ctx.storage.delete(file.fileId);
+        return await ctx.db.delete(file._id);
+      })
+    );
+  },
+});
