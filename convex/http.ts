@@ -1,5 +1,4 @@
 import { httpRouter } from "convex/server";
-
 import { internal } from "./_generated/api";
 import { httpAction } from "./_generated/server";
 
@@ -32,7 +31,7 @@ http.route({
             image: result.data.image_url
           });
           break;
-          case "user.updated":
+        case "user.updated":
           await ctx.runMutation(internal.users.updateUser, {
             tokenIdentifier: `https://${process.env.CLERK_HOSTNAME}|${result.data.id}`,
             name: `${result.data.first_name ?? ""} ${
@@ -48,7 +47,7 @@ http.route({
             role: result.data.role === "admin" ? "admin" : "member",
           });
           break;
-          case "organizationMembership.updated":
+        case "organizationMembership.updated":
           console.log(result.data.role)
           await ctx.runMutation(internal.users.updateRoleInOrgForUser, {
             tokenIdentifier: `https://${process.env.CLERK_HOSTNAME}|${result.data.public_user_data.user_id}`,
@@ -62,6 +61,7 @@ http.route({
         status: 200,
       });
     } catch (err) {
+      console.error("Webhook Error:", err);
       return new Response("Webhook Error", {
         status: 400,
       });

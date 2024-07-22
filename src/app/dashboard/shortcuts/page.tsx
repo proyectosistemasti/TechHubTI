@@ -2,7 +2,7 @@
 
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api"; // Ajusta la ruta según sea necesario
-import { ShortcutComponent} from "./_components/ShortcutComponent"
+import { ShortcutComponent } from "./_components/ShortcutComponent";
 import { Id } from "../../../../convex/_generated/dataModel"; // Ajusta la ruta según sea necesario
 
 // Define el tipo para un acceso directo
@@ -10,10 +10,10 @@ interface Shortcut {
   _id: Id<"shortcuts">;
   url: string;
   description?: string;
-  title: string; // Cambiado a 'title' porque 'title' debería ser requerido
+  title: string;
   password?: string;
   userId: Id<"users">;
-  _creationTime: Date; // Añadido para coincidir con el uso en el componente
+  _creationTime: Date;
 }
 
 export default function ShortcutsPage() {
@@ -26,6 +26,7 @@ export default function ShortcutsPage() {
   }
 
   if (queryResult instanceof Error) {
+    console.error('Error loading shortcuts:', queryResult);
     return <div>Error loading shortcuts: {queryResult.message}</div>;
   }
 
@@ -40,7 +41,7 @@ export default function ShortcutsPage() {
   return (
     <div className="p-4">
       {/* Componente para gestionar y mostrar accesos directos */}
-      <ShortcutComponent/>
+      <ShortcutComponent shortcuts={shortcuts} />
     </div>
   );
 }

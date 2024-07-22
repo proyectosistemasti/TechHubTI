@@ -90,8 +90,8 @@ export const updateShortcut = mutation({
 
     const shortcut = await ctx.db.get(args.shortcutId);
 
-    if (!shortcut || shortcut.userId !== access.user._id) {
-      throw new ConvexError("No access to update this shortcut");
+    if (!shortcut) {
+      throw new ConvexError("Shortcut not found");
     }
 
     await ctx.db.patch(args.shortcutId, {
@@ -115,8 +115,8 @@ export const deleteShortcut = mutation({
 
     const shortcut = await ctx.db.get(args.shortcutId);
 
-    if (!shortcut || shortcut.userId !== access.user._id) {
-      throw new ConvexError("No access to delete this shortcut");
+    if (!shortcut) {
+      throw new ConvexError("Shortcut not found");
     }
 
     await ctx.db.delete(args.shortcutId);
