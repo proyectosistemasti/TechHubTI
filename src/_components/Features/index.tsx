@@ -11,8 +11,8 @@ const Features = () => {
       >
         <div className="container">
           <SectionTitle
-            title="Accesos Directos"
-            paragraph="Estos accesos son para ingresar a la distintas páginas web donde se realizan ciertas actividades del departamento"
+            title="Trabajos que se realizan"
+            paragraph="En el departamento de sistemas se resuelven ciertas incidencias tecnologícas tanto con los huéspedes como con los colaboradores de HXA "
             center
           />
 
