@@ -1,16 +1,17 @@
 // files.ts
 
 import { ConvexError, v } from "convex/values";
-import { internalMutation, mutation, MutationCtx, query, QueryCtx } from "./_generated/server";
-// import { getUser } from "./users";
+import {
+  internalMutation,
+  mutation,
+  MutationCtx,
+  query,
+  QueryCtx,
+} from "./_generated/server";
 import { fileTypes, fileCategories } from "./schema";
 import { Doc, Id } from "./_generated/dataModel";
 
-// Función para verificar si un usuario tiene acceso a una organización
-async function hasAccessToOrg(
-  ctx: QueryCtx | MutationCtx,
-  orgId: string
-) {
+async function hasAccessToOrg(ctx: QueryCtx | MutationCtx, orgId: string) {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {
     return null;
@@ -27,7 +28,6 @@ async function hasAccessToOrg(
     return null;
   }
 
-  // Verificar si el usuario tiene acceso a la organización
   const hasAccess =
     user.orgIds.some((item) => item.orgId === orgId) ||
     user.tokenIdentifier.includes(orgId);
@@ -39,16 +39,11 @@ async function hasAccessToOrg(
   return { user };
 }
 
-// Mutación para generar una URL de subida de archivo
 export const generateUploadUrl = mutation(async (ctx) => {
-  // Obtener la identidad del usuario
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {
-    // Si no hay identidad, lanzar un error
     throw new ConvexError("You have no access to this Org");
   }
-
-  // Generar y devolver la URL de subida
   return await ctx.storage.generateUploadUrl();
 });
 
@@ -58,7 +53,7 @@ export const createFile = mutation({
     fileId: v.id("_storage"),
     orgId: v.string(),
     type: fileTypes,
-    category: fileCategories
+    category: fileCategories,
   },
   async handler(ctx, args) {
     const hasAccess = await hasAccessToOrg(ctx, args.orgId);
@@ -67,12 +62,10 @@ export const createFile = mutation({
       throw new ConvexError("You have no access to this Org");
     }
 
-    // Validar si es un archivo de tipo schedule
     if (args.category === "schedule") {
-      // Verificar si ya existe un archivo de tipo schedule
       const existingSchedule = await ctx.db
         .query("files")
-        .withIndex("by_orgId_category", q =>
+        .withIndex("by_orgId_category", (q) =>
           q.eq("orgId", args.orgId).eq("category", "schedule")
         )
         .first();
@@ -81,7 +74,6 @@ export const createFile = mutation({
         throw new ConvexError("Only one schedule file is allowed.");
       }
 
-      // Verificar que el archivo sea una imagen
       if (args.type !== "image") {
         throw new ConvexError("Schedule files must be images.");
       }
@@ -94,14 +86,11 @@ export const createFile = mutation({
       type: args.type,
       userId: hasAccess.user._id,
       category: args.category,
-      uploadedAt: Date.now(), // Guardamos la marca de tiempo
+      uploadedAt: Date.now(),
     });
   },
 });
 
-
-
-// Consulta para obtener archivos de una organización
 export const getFiles = query({
   args: {
     orgId: v.string(),
@@ -109,7 +98,7 @@ export const getFiles = query({
     favorites: v.optional(v.boolean()),
     deletedOnly: v.optional(v.boolean()),
     type: v.optional(fileTypes),
-    category: v.optional(fileCategories) // Añadimos category como argumento opcional
+    category: v.optional(fileCategories),
   },
   async handler(ctx, args) {
     const hasAccess = await hasAccessToOrg(ctx, args.orgId);
@@ -118,7 +107,6 @@ export const getFiles = query({
       return [];
     }
 
-    // Consultar y devolver los archivos de la organización
     let files = await ctx.db
       .query("files")
       .withIndex("by_orgId", (q) => q.eq("orgId", args.orgId))
@@ -156,18 +144,17 @@ export const getFiles = query({
     }
 
     if (args.category) {
-      files = files.filter((file) => file.category === args.category); // Filtramos por category si está presente en los argumentos
+      files = files.filter((file) => file.category === args.category);
     }
 
     return files;
   },
 });
 
-// Nueva consulta para obtener archivos por categoría
 export const getFilesByCategory = query({
   args: {
     orgId: v.string(),
-    category: fileCategories
+    category: fileCategories,
   },
   async handler(ctx, args) {
     const hasAccess = await hasAccessToOrg(ctx, args.orgId);
@@ -186,7 +173,6 @@ export const getFilesByCategory = query({
     return files;
   },
 });
-
 
 export const deleteAllFiles = internalMutation({
   args: {},
@@ -226,9 +212,14 @@ export const deleteFile = mutation({
 
     assertCanDeleteFile(access.user, access.file);
 
-    await ctx.db.patch(args.fileId, {
-      shouldDelete: true,
-    });
+    if (access.file.category === "schedule") {
+      await ctx.storage.delete(access.file.fileId);
+      await ctx.db.delete(access.file._id);
+    } else {
+      await ctx.db.patch(args.fileId, {
+        shouldDelete: true,
+      });
+    }
   },
 });
 
@@ -255,7 +246,6 @@ export const getFileUrl = query({
     fileId: v.id("_storage"),
   },
   async handler(ctx, args) {
-    // Obtener y devolver la URL del archivo
     const url = await ctx.storage.getUrl(args.fileId);
     return url;
   },
@@ -332,9 +322,6 @@ async function hasAccessToFile(
   return { user: hasAccess.user, file };
 }
 
-
-
-
 export const deleteScheduleFiles = internalMutation({
   args: {},
   async handler(ctx) {
@@ -349,5 +336,26 @@ export const deleteScheduleFiles = internalMutation({
         return await ctx.db.delete(file._id);
       })
     );
+  },
+});
+
+export const getScheduleFileUrl = query({
+  args: {
+    orgId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const scheduleFile = await ctx.db
+      .query("files")
+      .withIndex("by_orgId_category", (q) =>
+        q.eq("orgId", args.orgId).eq("category", "schedule")
+      )
+      .first();
+
+    if (!scheduleFile) {
+      return null;
+    }
+
+    const url = await ctx.storage.getUrl(scheduleFile.fileId);
+    return { ...scheduleFile, url };
   },
 });

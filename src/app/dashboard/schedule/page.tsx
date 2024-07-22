@@ -1,11 +1,12 @@
-'use client';
+'use client'
+import ScheduleView from "./_components/ScheduleView";
 
-import { FileBrowser } from "../_components/file-browser";
+export default function SchedulePage() {
+  const orgId = "org_2jG3xWimiJbqu9mlewvsauwNgTl"; // Reemplaza "your-org-id" con el ID de tu organización
 
-export default function ManualsPage() {
   return (
     <div>
-      <FileBrowser title="Schedule" category="schedule" />
+      <ScheduleView orgId={orgId} />
     </div>
   );
 }

@@ -70,7 +70,7 @@ export function ShortcutComponent({ shortcuts }: ShortcutComponentProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Add Shortcut</AlertDialogTitle>
             <AlertDialogAction>
-              Provide the URL, title, description, and optional password for the new shortcut.
+              Modify the title, description, and password for this shortcut.
             </AlertDialogAction>
           </AlertDialogHeader>
           <div className="p-4">
@@ -148,7 +148,6 @@ export function ShortcutComponent({ shortcuts }: ShortcutComponentProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
       {/* Edit Shortcut Dialog */}
       <AlertDialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <AlertDialogContent>
@@ -282,8 +281,8 @@ export function ShortcutComponent({ shortcuts }: ShortcutComponentProps) {
       {/* Tabs for List and Grid Views */}
       <Tabs value={tab} onValueChange={setTab} className="mb-4">
         <TabsList className="mb-2 gap-2">
-          <TabsTrigger className="gap-2" value="list"><RowsIcon/> Table</TabsTrigger>
-          <TabsTrigger className="gap-2" value="grid"><GridIcon/> Grid</TabsTrigger>
+          <TabsTrigger className="gap-2" value="list"><RowsIcon /> Table</TabsTrigger>
+          <TabsTrigger className="gap-2" value="grid"><GridIcon /> Grid</TabsTrigger>
         </TabsList>
         <TabsContent value="list">
           <Table>
