@@ -24,8 +24,8 @@ const AboutSectionOne = () => {
           <div className="-mx-4 flex flex-wrap items-center">
             <div className="w-full px-4 lg:w-1/2">
               <SectionTitle
-                title="Crafted for Startup, SaaS and Business Sites."
-                paragraph="The main ‘thrust’ is to focus on educating attendees on how to best protect highly vulnerable business applications with interactive panel discussions and roundtables."
+                title="Manuales y formatos para las descargas de ciertas Apps utlizadas en HXA."
+                paragraph="Para la descarga de ciertos manuales solo le damos click en el apartado donde se encuentran los archivos, en esta sección pueden encontrar los siguientes archivos:"
                 mb="44px"
               />
 
@@ -35,15 +35,13 @@ const AboutSectionOne = () => {
               >
                 <div className="mx-[-12px] flex flex-wrap">
                   <div className="w-full px-3 sm:w-1/2 lg:w-full xl:w-1/2">
-                    <List text="Premium quality" />
-                    <List text="Tailwind CSS" />
-                    <List text="Use for lifetime" />
+                    <List text="Descarga e instalación de Succes Factor" />
+                    <List text="Configuración de Outlook" />
+                    <List text="Cómo subir un ticket" />
                   </div>
 
                   <div className="w-full px-3 sm:w-1/2 lg:w-full xl:w-1/2">
-                    <List text="Next.js" />
-                    <List text="Rich documentation" />
-                    <List text="Developer friendly" />
+                    <List text="Configuración de Service Now" />
                   </div>
                 </div>
               </div>
@@ -55,7 +53,7 @@ const AboutSectionOne = () => {
                 data-wow-delay=".2s"
               >
                 <Image
-                  src="/images/about/about-image.svg"
+                  src="/images/about/Archivos.jpg"
                   alt="about-image"
                   fill
                   className="mx-auto max-w-full lg:mr-0"

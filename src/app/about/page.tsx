@@ -11,8 +11,8 @@ const AboutPage = () => {
       <Providers>
         <Header />
         <Breadcrumb
-          pageName="About Page"
-          description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In varius eros eget sapien consectetur ultrices. Ut quis dapibus libero."
+          pageName="Manuales y Formatos"
+          description="Los formatos y manuales que se encuentran en esta sección le serán de utilidad para la instalación  y configuraciones de ciertas aplicaciones utilizadas en HXA."
         />
         <AboutSectionOne />
         <AboutSectionTwo />

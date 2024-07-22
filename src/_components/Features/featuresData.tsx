@@ -30,7 +30,7 @@ const featuresData: Feature[] = [
       className="w-60 h-60"
       />
     ),
-    title: "Usuarios",
+    title: "Configuración de usuarios",
     paragraph:
       "Se realiza administración en la cuenta en cuentas de usuarios en los equipos de computo de la empresa.",
   },
@@ -38,14 +38,14 @@ const featuresData: Feature[] = [
     id: 1,
     icon: (
       <Image
-        src="/images/hero/AppleTV.jpg" 
+        src="/images/hero/AppleTv.jpeg" 
         width={300}
         height={300}
         alt="Apple TV"
         className="w-full h-full object-cover"
       />
     ),
-    title: "Apple TV",
+    title: "Configuración de Apple TV",
     paragraph:
       "Configuración de Apple TV en habitaciones de HXA.",
   },
