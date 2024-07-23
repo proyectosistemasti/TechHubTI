@@ -1,5 +1,4 @@
-import SharePost from "@/_components/Blog/SharePost";
-import TagButton from "@/_components/Blog/TagButton";
+
 import Image from "next/image";
 
 const BlogDetailsPage = () => {
@@ -307,26 +306,6 @@ const BlogDetailsPage = () => {
                     dolore eu fugiat nulla pariatur. Excepteur sint occaecat
                     mattis vulputate cupidatat.
                   </p>
-                  <div className="items-center justify-between sm:flex">
-                    <div className="mb-5">
-                      <h5 className="mb-3 text-sm font-medium text-body-color">
-                        Popular Tags :
-                      </h5>
-                      <div className="flex items-center">
-                        <TagButton text="Design" />
-                        <TagButton text="Development" />
-                        <TagButton text="Info" />
-                      </div>
-                    </div>
-                    <div className="mb-5">
-                      <h5 className="mb-3 text-sm font-medium text-body-color sm:text-right">
-                        Share this post :
-                      </h5>
-                      <div className="flex items-center sm:justify-end">
-                        <SharePost />
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
