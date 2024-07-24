@@ -136,7 +136,7 @@ export function UploadButton() {
       setIsLoading(false);
     }
   }
-  
+
   return (
     <Dialog
       open={isFileDialogOpen}
