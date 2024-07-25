@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 import Link from "next/link";
-import { BookOpen, CalendarCheck2, Clipboard, FileIcon, GripIcon, LucidePaperclip, PaperclipIcon, StarIcon, TrashIcon } from "lucide-react";
+import { BookOpen, CalendarCheck2, Clipboard, FileIcon, GripIcon, PaperclipIcon, StarIcon, TrashIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export function SideNav() {
