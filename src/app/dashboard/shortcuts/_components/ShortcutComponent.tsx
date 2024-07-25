@@ -24,6 +24,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Id } from "../../../../../convex/_generated/dataModel";
 import { formatRelative } from "date-fns";
 import Link from "next/link";
+import { SearchBar } from "./search-bar";
 
 interface Shortcut {
   _id: Id<"shortcuts">;
@@ -54,6 +55,8 @@ export function ShortcutComponent({ shortcuts }: ShortcutComponentProps) {
   const [editShortcut, setEditShortcut] = useState<Shortcut | null>(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [tab, setTab] = useState("list");
+  const [query, setQuery] = useState<string>("");
+
 
   function normalizeUrl(url: string): string {
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
@@ -66,16 +69,22 @@ export function ShortcutComponent({ shortcuts }: ShortcutComponentProps) {
     return url.length > maxLength ? `${url.substring(0, maxLength)}...` : url;
   }
 
+  // Filtra los shortcuts según el query
+  const filteredShortcuts = shortcuts.filter(shortcut =>
+    shortcut.title.toLowerCase().includes(query.toLowerCase())
+  );
+
   return (
-    <div>
-      {/* Add Shortcut Dialog */}
+    <div className="p-4">
+      <div className="flex justify-between items-center mb-4">
+        <Button onClick={() => setIsAddOpen(true)}>Add Shortcut</Button>
+        <SearchBar query={query} setQuery={setQuery} />
+      </div>
+
       <AlertDialog open={isAddOpen} onOpenChange={setIsAddOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Add Shortcut</AlertDialogTitle>
-            <AlertDialogAction>
-              Modify the title, description, and password for this shortcut.
-            </AlertDialogAction>
           </AlertDialogHeader>
           <div className="p-4">
             <label className="block mb-2">
@@ -152,14 +161,11 @@ export function ShortcutComponent({ shortcuts }: ShortcutComponentProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      {/* Edit Shortcut Dialog */}
+
       <AlertDialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Edit Shortcut</AlertDialogTitle>
-            <AlertDialogAction>
-              Modify the title, description, and password for this shortcut.
-            </AlertDialogAction>
           </AlertDialogHeader>
           <div className="p-4">
             <label className="block mb-2">
@@ -251,7 +257,6 @@ export function ShortcutComponent({ shortcuts }: ShortcutComponentProps) {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Confirm Delete Dialog */}
       <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -301,7 +306,7 @@ export function ShortcutComponent({ shortcuts }: ShortcutComponentProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {shortcuts.map((shortcut) => (
+              {filteredShortcuts.map((shortcut) => (
                 <TableRow key={shortcut._id}>
                   <TableCell>{shortcut.title}</TableCell>
                   <TableCell>{shortcut.description}</TableCell>
@@ -348,8 +353,8 @@ export function ShortcutComponent({ shortcuts }: ShortcutComponentProps) {
           </Table>
         </TabsContent>
         <TabsContent value="grid">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {shortcuts.map((shortcut) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {filteredShortcuts.map((shortcut) => (
               <Card key={shortcut._id}>
                 <CardHeader>
                   <CardTitle>{shortcut.title}</CardTitle>
@@ -386,8 +391,6 @@ export function ShortcutComponent({ shortcuts }: ShortcutComponentProps) {
           </div>
         </TabsContent>
       </Tabs>
-
-      <Button onClick={() => setIsAddOpen(true)}>Add Shortcut</Button>
     </div>
   );
 }
