@@ -25,6 +25,8 @@ import {
   StarHalf,
   UndoIcon,
   Download,
+  FileSpreadsheet, // Added for xlsx
+  Presentation, // Added for pptx
 } from "lucide-react";
 import {
   AlertDialog,
@@ -45,7 +47,6 @@ import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { Protect } from "@clerk/nextjs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatRelative } from 'date-fns';
-
 
 // Componente para manejar las acciones del archivo
 export function FileCardActions({ file, fileUrl, isFavorited }: { file: Doc<"files">; fileUrl: string | null; isFavorited: boolean; }) {
@@ -178,12 +179,15 @@ export function FileCard({ file }: { file: Doc<"files"> & { isFavorited: boolean
     userId: file.userId
   });
 
+  // Define icons for file types
   const typeIcons: Record<string, ReactNode> = {
     image: <ImageIcon />,
     pdf: <FileIcon />,
     csv: <FileBarChart2 />,
     doc: <FileTextIcon />,
     txt: <NotepadTextIcon />,
+    xlsx: <FileSpreadsheet />, // Added for xlsx
+    pptx: <Presentation />, // Added for pptx
   };
 
   return (
@@ -225,6 +229,5 @@ export function FileCard({ file }: { file: Doc<"files"> & { isFavorited: boolean
         </div>
       </CardFooter>
     </Card>
-
   );
 }

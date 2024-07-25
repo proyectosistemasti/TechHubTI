@@ -23,8 +23,12 @@ import { Loader2 } from "lucide-react";
 import { Doc } from "../../../../convex/_generated/dataModel";
 
 // Define file categories as a literal union type
-const fileCategories = ["manual", "format", "schedule", "video", "other"] as const;
+const fileCategories = ["manual", "format", "schedule", "other"] as const;
 type FileCategory = typeof fileCategories[number];
+
+// Define file types as a literal union type
+const fileTypes = ["image", "csv", "pdf", "doc", "txt", "xlsx", "pptx"] as const;
+type FileType = typeof fileTypes[number];
 
 const formSchema = z.object({
   title: z.string().min(1).max(200),
@@ -77,7 +81,7 @@ export function UploadButton() {
 
       const { storageId } = await result.json();
 
-      const types = {
+      const types: Record<string, Doc<"files">["type"]> = {
         "image/png": "image",
         "image/jpg": "image",
         "image/jpeg": "image",
@@ -85,8 +89,11 @@ export function UploadButton() {
         "text/csv": "csv",
         "application/msword": "doc",
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "doc",
-        "text/plain": "txt"
-      } as Record<string, Doc<"files">["type"]>;
+        "text/plain": "txt",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "xlsx", // Added xlsx
+        "application/vnd.ms-powerpoint": "pptx", // Added pptx
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation": "pptx" // Added pptx
+      };
 
       const fileTypeKey = types[fileType];
 
