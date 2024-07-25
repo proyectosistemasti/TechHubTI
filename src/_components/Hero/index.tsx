@@ -34,9 +34,9 @@ const HeroAndSchedule: React.FC = () => {
   return (
     <>
       <section
-  id="home"
-  className="relative z-10 overflow-hidden pt-12 pb-8 md:pt-16 md:pb-12 xl:pt-20 xl:pb-16 2xl:pt-24 2xl:pb-20"
->
+        id="home"
+        className="relative z-10 overflow-hidden pt-24 pb-8 md:pt-16 md:pb-12 xl:pt-20 xl:pb-16 2xl:pt-24 2xl:pb-20"
+      >
 
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
@@ -265,9 +265,8 @@ const HeroAndSchedule: React.FC = () => {
       </section>
 
       <div
-        className={`flex justify-center items-center ${
-          isFullScreen ? "fixed inset-0 z-50 bg-black bg-opacity-75" : ""
-        }`}
+        className={`flex justify-center items-center ${isFullScreen ? "fixed inset-0 z-50 bg-black bg-opacity-75" : ""
+          }`}
       >
         <Image
           src={scheduleFile.url}
