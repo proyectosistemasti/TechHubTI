@@ -1,12 +1,43 @@
-import Link from "next/link";
+'use client'
 
-const Hero = () => {
+import Link from "next/link";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import Image from "next/image";
+import React, { useState } from "react";
+
+const HeroAndSchedule: React.FC = () => {
+  const orgId = "org_2jhUhTHQQzKyBPYxPA3609WTc2R";
+  const scheduleFile = useQuery(api.files.getScheduleFileUrl, { orgId });
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  if (!scheduleFile) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-gray-500">Loading...</p>
+      </div>
+    );
+  }
+
+  if (!scheduleFile.url) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-red-500">No schedule file found.</p>
+      </div>
+    );
+  }
+
+  const handleImageClick = () => {
+    setIsFullScreen(!isFullScreen);
+  };
+
   return (
     <>
       <section
-        id="home"
-        className="relative z-10 overflow-hidden pt-[120px] pb-16 md:pt-[150px] md:pb-[120px] xl:pt-[180px] xl:pb-[160px] 2xl:pt-[210px] 2xl:pb-[200px]"
-      >
+  id="home"
+  className="relative z-10 overflow-hidden pt-12 pb-8 md:pt-16 md:pb-12 xl:pt-20 xl:pb-16 2xl:pt-24 2xl:pb-20"
+>
+
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4">
@@ -15,9 +46,8 @@ const Hero = () => {
                 data-wow-delay=".2s"
               >
                 <h1 className="mb-5 text-3xl font-bold leading-tight text-indigo-900 dark:text-white sm:text-4xl sm:leading-tight md:text-5xl md:leading-tight">
-                Horario de TI en HXA
+                  Horario de la Semana
                 </h1>
-
               </div>
             </div>
           </div>
@@ -181,25 +211,16 @@ const Hero = () => {
               stroke="url(#paint2_linear_25:218)"
             />
             <path
-              d="M-98.1618 65.0889C-68.1416 60.0601 4.73364 60.4882 56.0734 102.431C120.248 154.86 139.905 161.419 177.137 166.956C214.37 172.493 255.575 186.165 281.856 215.481"
+              d="M-98.1618 79.056C-70.3912 73.2055 -2.65456 71.6343 46.1273 112.153C107.104 162.801 125.539 168.819 160.282 173.332C195.025 177.846 233.667 190.382 258.838 218.965"
               stroke="url(#paint3_linear_25:218)"
             />
-            <circle
-              opacity="0.8"
-              cx="214.505"
-              cy="60.5054"
-              r="49.7205"
-              transform="rotate(-13.421 214.505 60.5054)"
-              stroke="url(#paint4_linear_25:218)"
-            />
-            <circle cx="220" cy="63" r="43" fill="url(#paint5_radial_25:218)" />
             <defs>
               <linearGradient
                 id="paint0_linear_25:218"
                 x1="184.389"
-                y1="69.2405"
+                y1="210.24"
                 x2="184.389"
-                y2="212.24"
+                y2="68.3298"
                 gradientUnits="userSpaceOnUse"
               >
                 <stop stopColor="#4A6CF7" stopOpacity="0" />
@@ -208,9 +229,9 @@ const Hero = () => {
               <linearGradient
                 id="paint1_linear_25:218"
                 x1="156.389"
-                y1="69.2405"
+                y1="210.24"
                 x2="156.389"
-                y2="212.24"
+                y2="68.3298"
                 gradientUnits="userSpaceOnUse"
               >
                 <stop stopColor="#4A6CF7" stopOpacity="0" />
@@ -219,9 +240,9 @@ const Hero = () => {
               <linearGradient
                 id="paint2_linear_25:218"
                 x1="125.389"
-                y1="69.2405"
+                y1="210.24"
                 x2="125.389"
-                y2="212.24"
+                y2="68.3298"
                 gradientUnits="userSpaceOnUse"
               >
                 <stop stopColor="#4A6CF7" stopOpacity="0" />
@@ -229,43 +250,36 @@ const Hero = () => {
               </linearGradient>
               <linearGradient
                 id="paint3_linear_25:218"
-                x1="93.8507"
-                y1="67.2674"
-                x2="89.9278"
-                y2="210.214"
+                x1="80.3381"
+                y1="217.965"
+                x2="80.3381"
+                y2="76.0544"
                 gradientUnits="userSpaceOnUse"
               >
                 <stop stopColor="#4A6CF7" stopOpacity="0" />
                 <stop offset="1" stopColor="#4A6CF7" />
               </linearGradient>
-              <linearGradient
-                id="paint4_linear_25:218"
-                x1="214.505"
-                y1="10.2849"
-                x2="212.684"
-                y2="99.5816"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop stopColor="#4A6CF7" />
-                <stop offset="1" stopColor="#4A6CF7" stopOpacity="0" />
-              </linearGradient>
-              <radialGradient
-                id="paint5_radial_25:218"
-                cx="0"
-                cy="0"
-                r="1"
-                gradientUnits="userSpaceOnUse"
-                gradientTransform="translate(220 63) rotate(90) scale(43)"
-              >
-                <stop offset="0.145833" stopColor="white" stopOpacity="0" />
-                <stop offset="1" stopColor="white" stopOpacity="0.08" />
-              </radialGradient>
             </defs>
           </svg>
         </div>
       </section>
+
+      <div
+        className={`flex justify-center items-center ${
+          isFullScreen ? "fixed inset-0 z-50 bg-black bg-opacity-75" : ""
+        }`}
+      >
+        <Image
+          src={scheduleFile.url}
+          alt={scheduleFile.name || "Schedule"}
+          width={isFullScreen ? 1600 : 1200}
+          height={isFullScreen ? 1200 : 800}
+          className={`object-contain rounded ${isFullScreen ? "cursor-zoom-out" : "cursor-zoom-in"}`}
+          onClick={handleImageClick}
+        />
+      </div>
     </>
   );
 };
 
-export default Hero;
+export default HeroAndSchedule;
