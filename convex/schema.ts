@@ -6,7 +6,9 @@ export const fileTypes = v.union(
   v.literal("csv"),
   v.literal("pdf"),
   v.literal("doc"),
-  v.literal("txt")
+  v.literal("txt"),
+  v.literal("xlsx"), // Added xlsx
+  v.literal("pptx")  // Added pptx
 );
 
 export const roles = v.union(v.literal("admin"), v.literal("member"));
@@ -15,8 +17,7 @@ export const fileCategories = v.union(
   v.literal("manual"),
   v.literal("format"),
   v.literal("schedule"),
-  v.literal("video"),
-  v.literal("other")
+  v.literal("other") // Removed video
 );
 
 export default defineSchema({
