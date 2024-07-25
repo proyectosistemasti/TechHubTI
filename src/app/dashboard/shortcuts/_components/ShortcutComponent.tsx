@@ -62,6 +62,10 @@ export function ShortcutComponent({ shortcuts }: ShortcutComponentProps) {
     return url;
   }
 
+  function truncateUrl(url: string, maxLength: number = 30): string {
+    return url.length > maxLength ? `${url.substring(0, maxLength)}...` : url;
+  }
+
   return (
     <div>
       {/* Add Shortcut Dialog */}
@@ -303,7 +307,7 @@ export function ShortcutComponent({ shortcuts }: ShortcutComponentProps) {
                   <TableCell>{shortcut.description}</TableCell>
                   <TableCell>
                     <a href={normalizeUrl(shortcut.url)} target="_blank" rel="noopener noreferrer">
-                      {normalizeUrl(shortcut.url)}
+                      {truncateUrl(normalizeUrl(shortcut.url))}
                     </a>
                   </TableCell>
                   <TableCell>{formatRelative(shortcut._creationTime, new Date())}</TableCell>
@@ -320,6 +324,7 @@ export function ShortcutComponent({ shortcuts }: ShortcutComponentProps) {
                             setEditShortcut(shortcut);
                             setIsEditOpen(true);
                           }}
+                          className="text-yellow-400"
                         >
                           <Edit2 className="w-4 h-4 mr-2" />
                           Edit
@@ -329,6 +334,7 @@ export function ShortcutComponent({ shortcuts }: ShortcutComponentProps) {
                             setEditShortcut(shortcut);
                             setIsConfirmOpen(true);
                           }}
+                          className="text-red-600"
                         >
                           <TrashIcon className="w-4 h-4 mr-2" />
                           Delete
@@ -351,7 +357,7 @@ export function ShortcutComponent({ shortcuts }: ShortcutComponentProps) {
                 <CardContent>
                   <p>{shortcut.description}</p>
                   <Link href={normalizeUrl(shortcut.url)} target="_blank">
-                    {normalizeUrl(shortcut.url)}
+                    {truncateUrl(normalizeUrl(shortcut.url))}
                   </Link>
                 </CardContent>
                 <CardFooter>
