@@ -9,30 +9,16 @@ const menuData: Menu[] = [
   },
   {
     id: 2,
-    title: "Manuales y Formatos",
-    path: "/about",
+    title: "Manuales ",
+    path: "/manuals",
     newTab: false,
   },
-
-
   {
-    id: 4,
-    title: "Paginas",
+    id: 2,
+    title: "Formatos ",
+    path: "/formats",
     newTab: false,
-    submenu: [
-      {
-        id: 43,
-        title: "Inicio",
-        path: "/blog",
-        newTab: false,
-      },
-      {
-        id: 41,
-        title: "Manuales y Formatos",
-        path: "/about",
-        newTab: false,
-      },
-    ],
   },
+
 ];
 export default menuData;

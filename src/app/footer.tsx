@@ -15,8 +15,8 @@ export function Footer() {
           >
             Terms of Service
           </Link>
-          <Link className="text-blue-900 hover:text-blue-500" href="/about">
-            About
+          <Link className="text-blue-900 hover:text-blue-500" href="/manuals">
+            Manuales
           </Link>
         </div>
       </div>

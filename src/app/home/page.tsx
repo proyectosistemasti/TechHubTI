@@ -1,5 +1,5 @@
-import AboutSectionOne from "@/_components/About/AboutSectionOne";
-import AboutSectionTwo from "@/_components/About/AboutSectionTwo";
+import AboutSectionManuals from "@/_components/About/AboutSectionManuals";
+import AboutSectionFormats from "@/_components/About/AboutSectionFormats";
 import ScrollUp from "@/_components/Common/ScrollUp";
 import Features from "@/_components/Features";
 import Hero from "@/_components/Hero";
@@ -22,8 +22,8 @@ export default function Home() {
         {/* <ScheduleImage /> */}
         <Features />
         <Video />
-        <AboutSectionOne />
-        <AboutSectionTwo />
+        <AboutSectionManuals />
+        <AboutSectionFormats />
         <Footer />
       </Providers>
     </ConvexClientProvider>

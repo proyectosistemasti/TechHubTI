@@ -16,9 +16,9 @@ const Footer = () => {
                   <Image
                     src="/images/footer/hxa.svg"
                     alt="logo"
-                    className="w-full dark:hidden"
                     width={140}
                     height={30}
+                    className="w-full dark:hidden"
                   />
                   <Image
                     src="/HXA.png"

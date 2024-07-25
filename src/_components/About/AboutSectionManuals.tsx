@@ -7,7 +7,7 @@ const checkIcon = (
   </svg>
 );
 
-const AboutSectionOne = () => {
+const AboutSectionManuals = () => {
   const List = ({ text }) => (
     <p className="mb-5 flex items-center text-lg font-medium text-body-color">
       <span className="mr-4 flex h-[30px] w-[30px] items-center justify-center rounded-md bg-primary bg-opacity-10 text-primary">
@@ -24,7 +24,7 @@ const AboutSectionOne = () => {
           <div className="-mx-4 flex flex-wrap items-center">
             <div className="w-full px-4 lg:w-1/2">
               <SectionTitle
-                title="Manuales y formatos para las descargas de ciertas Apps utlizadas en HXA."
+                title="Manuales para configuración y descargas de Apps de HXA"
                 paragraph="Para la descarga de ciertos manuales solo le damos click en el apartado donde se encuentran los archivos, en esta sección pueden encontrar los siguientes archivos:"
                 mb="44px"
               />
@@ -67,4 +67,4 @@ const AboutSectionOne = () => {
   );
 };
 
-export default AboutSectionOne;
+export default AboutSectionManuals;
