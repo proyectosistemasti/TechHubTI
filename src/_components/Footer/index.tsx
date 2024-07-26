@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    
+
       <footer
         className="wow fadeInUp relative z-6 pt-2 md:pt-4 lg:pt-5"
         data-wow-delay=".1s"
@@ -104,11 +104,6 @@ const Footer = () => {
           </div>
         </div>
         <div className="bg-primary/10 w-full">
-          <div className="container bg-black">
-            <p className="text-center text-base text-body-color dark:text-white">
-              Template by UIdeck and <a href="https://nextjstemplates.com" rel="nofollow noopener">Next.js Templates</a>
-            </p>
-          </div>
         </div>
         <div className="absolute right-0 top-14 z-[-1]">
           <svg
@@ -301,7 +296,7 @@ const Footer = () => {
           </svg>
         </div>
       </footer>
-    
+
   );
 };
 
