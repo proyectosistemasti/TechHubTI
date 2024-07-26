@@ -1,7 +1,6 @@
 'use client';
 
 import { api } from "../../../../convex/_generated/api";
-// import { useOrganization, useUser } from "@clerk/clerk-react";
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { UploadButton } from "./upload-button";
@@ -9,7 +8,7 @@ import { FileCard } from "@/app/dashboard/_components/file-card";
 import Image from "next/image";
 import { SearchBar } from "./search-bar";
 import { useState } from "react";
-import { GridIcon, Loader2, RowsIcon, TableIcon } from "lucide-react";
+import { GridIcon, Loader2, RowsIcon } from "lucide-react";
 import { DataTable } from "./file-table";
 import { columns } from "./columns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -75,7 +74,7 @@ export function FileBrowser({
         query,
         favorites: favoritesOnly,
         deletedOnly,
-        category, // Añadir la categoría a los parámetros de la consulta
+        category,
       }
       : "skip"
   );
@@ -90,7 +89,6 @@ export function FileBrowser({
       ),
     })) ?? [];
 
-  // file-browser.tsx
   return (
     <div>
       <div className="flex flex-col md:flex-row items-center justify-between mb-8">
@@ -127,6 +125,8 @@ export function FileBrowser({
                 <SelectItem value="image">Image</SelectItem>
                 <SelectItem value="csv">CSV</SelectItem>
                 <SelectItem value="pdf">PDF</SelectItem>
+                <SelectItem value="xlsx">Excel</SelectItem>
+                <SelectItem value="pptx">PowerPoint</SelectItem>
               </SelectContent>
             </Select>
           </div>

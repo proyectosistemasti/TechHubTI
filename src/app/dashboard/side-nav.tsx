@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 import Link from "next/link";
-import { BookOpen, CalendarCheck2, Clipboard, FileIcon, GripIcon, LucidePaperclip, PaperclipIcon, StarIcon, TrashIcon, TvMinimalPlay } from "lucide-react";
+import { BookOpen, CalendarCheck2, Clipboard, FileIcon, GripIcon, PaperclipIcon, StarIcon, TrashIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export function SideNav() {
@@ -17,7 +17,7 @@ export function SideNav() {
     { href: "/dashboard/formats", label: "Formats", icon: Clipboard, colorClass: "text-green-500", hoverClass: "hover:text-green-500" },
     { href: "/dashboard/manuals", label: "Manuals", icon: BookOpen, colorClass: "text-teal-500", hoverClass: "hover:text-teal-500" },
     { href: "/dashboard/schedule", label: "Schedule", icon: CalendarCheck2, colorClass: "text-purple-500", hoverClass: "hover:text-purple-500" },
-    { href: "/dashboard/video", label: "Video", icon: TvMinimalPlay, colorClass: "text-red-500", hoverClass: "hover:text-red-500" },
+    // Removed video entry
     { href: "/dashboard/others", label: "Others", icon: GripIcon, colorClass: "text-orange-500", hoverClass: "hover:text-orange-500" },
     { href: "/dashboard/shortcuts", label: "Shortcuts", icon: PaperclipIcon, colorClass: "text-cyan-400", hoverClass: "hover:text-cyan-400" },
     { href: "/dashboard/trash", label: "Trash", icon: TrashIcon, colorClass: "text-red-500", hoverClass: "hover:text-red-500" },
