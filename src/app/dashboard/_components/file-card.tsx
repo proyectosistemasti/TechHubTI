@@ -181,6 +181,17 @@ export function FileCard({ file }: { file: Doc<"files"> & { isFavorited: boolean
 
   // Define icons for file types
   const typeIcons: Record<string, ReactNode> = {
+    image: <ImageIcon className="w-10 h-10" />,
+    pdf: <FileIcon className="w-10 h-10" />,
+    csv: <FileBarChart2 className="w-10 h-10" />,
+    doc: <FileTextIcon className="w-10 h-10" />,
+    txt: <NotepadTextIcon className="w-10 h-10" />,
+    xlsx: <FileSpreadsheet className="w-10 h-10" />, // Added for xlsx
+    pptx: <Presentation className="w-10 h-10" />, // Added for pptx
+  };
+
+  // Define icons for card title
+  const titleIcons: Record<string, ReactNode> = {
     image: <ImageIcon />,
     pdf: <FileIcon />,
     csv: <FileBarChart2 />,
@@ -194,7 +205,7 @@ export function FileCard({ file }: { file: Doc<"files"> & { isFavorited: boolean
     <Card className="flex flex-col">
       <CardHeader className="relative">
         <CardTitle className="flex items-center gap-2 text-base font-bold">
-          <div className="flex justify-center">{typeIcons[file.type]}</div>
+          <div className="flex justify-center">{titleIcons[file.type]}</div>
           {file.name}
         </CardTitle>
         <div className="absolute top-2 right-2">
