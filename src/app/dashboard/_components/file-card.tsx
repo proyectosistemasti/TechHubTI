@@ -47,8 +47,6 @@ import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { Protect } from "@clerk/nextjs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatRelative } from 'date-fns';
-import { Viewer, Worker } from "@react-pdf-viewer/core";
-import "@react-pdf-viewer/core/lib/styles/index.css";
 
 // Componente para manejar las acciones del archivo
 export function FileCardActions({ file, fileUrl, isFavorited }: { file: Doc<"files">; fileUrl: string | null; isFavorited: boolean; }) {
@@ -212,10 +210,6 @@ export function FileCard({ file }: { file: Doc<"files"> & { isFavorited: boolean
             height={200}
             className="object-cover w-full h-full"
           />
-        ) : file.type === "pdf" && fileUrl ? (
-          <Worker workerUrl={`https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.7.107/pdf.worker.min.js`}>
-            <Viewer fileUrl={fileUrl} />
-          </Worker>
         ) : (
           <div className="flex flex-col items-center justify-center">
             {typeIcons[file.type]}
