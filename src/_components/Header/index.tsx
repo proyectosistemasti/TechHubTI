@@ -57,7 +57,7 @@ const Header = () => {
                   src="/images/footer/hxa.svg"
                   alt="logo"
                   width={120}
-                  height={30}
+                  height={20}
                   className="w-full dark:hidden"
                 />
                 <Image

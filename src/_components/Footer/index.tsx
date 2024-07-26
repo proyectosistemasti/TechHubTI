@@ -3,16 +3,16 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <>
+    
       <footer
-        className="wow fadeInUp relative z-10 bg-slate-400 bg-opacity-5 pt-16 md:pt-20 lg:pt-24"
+        className="wow fadeInUp relative z-6 pt-2 md:pt-4 lg:pt-5"
         data-wow-delay=".1s"
       >
         <div className="container">
-          <div className="-mx-4 flex flex-wrap">
-            <div className="w-full px-4 md:w-1/2 lg:w-4/12 xl:w-5/12">
-              <div className="mb-12 max-w-[360px] lg:mb-16">
-                <Link href="https://www.grupoxcaret.com/es/" className="mb-8 inline-block">
+          <div className="-mx-2 flex flex-wrap">
+            <div className="w-full px-2 md:w-1/2 lg:w-4/12 xl:w-5/12">
+              <div className="max-w-[400px]">
+                <Link href="https://www.grupoxcaret.com/es/" className="inline-block">
                   <Image
                     src="/images/footer/hxa.svg"
                     alt="logo"
@@ -90,19 +90,6 @@ const Footer = () => {
               </div>
             </div>
 
-
-            <div className="w-full px-4 sm:w-1/2 md:w-1/2 lg:w-2/12 xl:w-2/12 flex justify-center items-center">
-              <div className="mb-12 lg:mb-16">
-                <a href="https://www.hotelxcaret.com/es/hotel-xcaret-mexico/">
-                  <img
-                    src="/images/footer/hxa.svg"
-                    alt="Imagen del Hotel Xcaret México"
-                    className="mb-2 w-40 items-center bg-white"
-                  />
-                </a>
-              </div>
-            </div>
-
             <div className="w-full px-4 md:w-1/2 lg:w-4/12 xl:w-3/12 flex justify-center items-center">
               <div className="mb-12 lg:mb-16">
                 <a href="https://www.hotelxcaret.com/es/hotel-xcaret-mexico/">
@@ -116,8 +103,8 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <div className="bg-primary/10 py-8">
-          <div className="container">
+        <div className="bg-primary/10 w-full">
+          <div className="container bg-black">
             <p className="text-center text-base text-body-color dark:text-white">
               Template by UIdeck and <a href="https://nextjstemplates.com" rel="nofollow noopener">Next.js Templates</a>
             </p>
@@ -314,7 +301,7 @@ const Footer = () => {
           </svg>
         </div>
       </footer>
-    </>
+    
   );
 };
 
