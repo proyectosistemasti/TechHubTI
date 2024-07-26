@@ -5,7 +5,7 @@ const Footer = () => {
   return (
 
       <footer
-        className="wow fadeInUp relative z-6 pt-2 md:pt-4 lg:pt-5"
+        className="wow fadeInUp relative z-6 pt-2 md:pt-4 lg:pt-5 mb-8"
         data-wow-delay=".1s"
       >
         <div className="container">
