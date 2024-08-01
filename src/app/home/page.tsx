@@ -10,6 +10,7 @@ import Footer from "@/_components/Footer";
 import { Providers } from "../provider";
 import ScheduleImage from "@/_components/Schedule/schedule";
 import ConvexClientProvider from "../ConvexClientProvider";
+import Testimonials from "@/_components/Testimonials";
 // const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
@@ -24,6 +25,7 @@ export default function Home() {
         <Video />
         <AboutSectionManuals />
         <AboutSectionFormats />
+        <Testimonials />
         <Footer />
       </Providers>
     </ConvexClientProvider>
