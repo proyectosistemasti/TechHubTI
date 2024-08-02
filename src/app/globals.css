@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -77,3 +79,17 @@
     @apply bg-background text-foreground;
   }
 }
+
+.menu-title {
+  font-size: 1.125rem; /* Tamaño de la fuente */
+  font-weight: 600;    /* Peso de la fuente */
+  color: #1a202c;      /* Color del texto */
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.menu-title:hover {
+  color: #3b82f6;      /* Color al pasar el ratón */
+  transform: scale(1.05); /* Efecto de escala al pasar el ratón */
+}
+
+

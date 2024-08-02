@@ -1,8 +1,8 @@
-import Testimonials from "@/_components/Testimonials";
 import Breadcrumb from "@/_components/Common/Breadcrumb";
 import Footer from "@/_components/Footer";
 import Header from "@/_components/Header";
 import { Providers } from "../provider";
+import Contactos from "@/_components/Contactos";
 
 const AboutPage = () => {
   return (
@@ -13,7 +13,7 @@ const AboutPage = () => {
           pageName=""
           description=""
         />
-        <Testimonials/>
+        <Contactos/>
         <Footer />
       </Providers>
     </>

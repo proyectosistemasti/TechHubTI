@@ -20,7 +20,7 @@ const featuresData: Feature[] = [
       "Se realiza mantenimiento de CPU así como también diagnostico de los problemas que presenta el equipo.",
   },
   {
-    id: 1,
+    id: 2,
     icon: (
       <Image
       src="/images/hero/usuarios.jpg" 
@@ -35,7 +35,7 @@ const featuresData: Feature[] = [
       "Se realiza administración en la cuenta en cuentas de usuarios en los equipos de computo de la empresa.",
   },
   {
-    id: 1,
+    id: 3,
     icon: (
       <Image
         src="/images/hero/AppleTv.jpeg" 
@@ -51,7 +51,7 @@ const featuresData: Feature[] = [
   },
 
   {
-    id: 1,
+    id: 4,
     icon: (
       <Image
         src="/images/hero/impresoras.jpg" 
@@ -66,7 +66,7 @@ const featuresData: Feature[] = [
       "Se realiza configuración de las impresoras con los equipos de computo, así mismo se realiza el cambio de toner de ser necesario.",
   },
   {
-    id: 1,
+    id: 5,
     icon: (
       <Image
       src="/images/hero/login.jpg" 
@@ -81,19 +81,19 @@ const featuresData: Feature[] = [
       "Restablecimiento de  la contraseña de su correo institucional.",
   },
   {
-    id: 1,
+    id: 6,
     icon: (
       <Image
-        src="/images/hero/impresoras.jpg" 
+        src="/images/hero/diagnostico.jpg" 
         width={300}
         height={300}
         alt="IMP"
         className="w-full h-full"
       />
     ),
-    title: "Configuración de impresoras",
+    title: "Diagnóstico de equipo para baja",
     paragraph:
-      "Se realiza configuración de las impresoras con los equipos de computo, así mismo se realiza el cambio de toner de ser necesario.",
+      "Se realiza una revisón del equipo de computo donde se diagnotica si el equipo se dará de baja o solo se le realizará una reparación.",
   },
 ];
 export default featuresData;

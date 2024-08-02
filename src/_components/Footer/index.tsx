@@ -92,7 +92,7 @@ const Footer = () => {
 
             <div className="w-full px-4 md:w-1/2 lg:w-4/12 xl:w-3/12 flex justify-center items-center">
               <div className="mb-12 lg:mb-16">
-                <a href="https://www.hotelxcaret.com/es/hotel-xcaret-mexico/">
+                <a href="https://www.lacasadelaplaya.com/es/">
                   <img
                     src="/images/footer/casa-playa.svg"
                     alt="Imagen del Hotel Xcaret México"
