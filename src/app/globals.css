@@ -1,8 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
 
 @layer base {
   :root {
@@ -91,5 +91,3 @@
   color: #3b82f6;      /* Color al pasar el ratón */
   transform: scale(1.05); /* Efecto de escala al pasar el ratón */
 }
-
-

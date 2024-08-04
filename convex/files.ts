@@ -1,5 +1,3 @@
-// files.ts
-
 import { ConvexError, v } from "convex/values";
 import {
   internalMutation,

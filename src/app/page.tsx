@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  redirect('/home');
+  redirect('/inicio');
   return (
     <>
       <ScrollUp />

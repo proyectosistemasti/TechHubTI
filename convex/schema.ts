@@ -7,8 +7,8 @@ export const fileTypes = v.union(
   v.literal("pdf"),
   v.literal("doc"),
   v.literal("txt"),
-  v.literal("xlsx"), // Added xlsx
-  v.literal("pptx")  // Added pptx
+  v.literal("xlsx"),
+  v.literal("pptx")
 );
 
 export const roles = v.union(v.literal("admin"), v.literal("member"));
@@ -17,7 +17,7 @@ export const fileCategories = v.union(
   v.literal("manual"),
   v.literal("format"),
   v.literal("schedule"),
-  v.literal("other") // Removed video
+  v.literal("other")
 );
 
 export default defineSchema({
@@ -29,7 +29,7 @@ export default defineSchema({
     userId: v.id("users"),
     shouldDelete: v.optional(v.boolean()),
     category: fileCategories,
-    uploadedAt: v.optional(v.number()), // Agregamos un campo para la marca de tiempo
+    uploadedAt: v.optional(v.number()),
   })
     .index("by_orgId", ["orgId"])
     .index("by_shouldDelete", ["shouldDelete"])
@@ -60,8 +60,8 @@ export default defineSchema({
     description: v.optional(v.string()),
     password: v.optional(v.string()),
     userId: v.id("users"),
-    orgId: v.string(), // Add orgId here
+    orgId: v.string(),
   })
     .index("by_userId", ["userId"])
-    .index("by_orgId", ["orgId"]), //
+    .index("by_orgId", ["orgId"]),
 });

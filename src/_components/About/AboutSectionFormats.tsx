@@ -7,16 +7,26 @@ const checkIcon = (
   </svg>
 );
 
-const AboutSectionManuals = () => {
-  const List = ({ text }) => (
-    <p className="mb-5 flex items-center text-lg font-medium text-body-color">
-      <span className="mr-4 flex h-[30px] w-[30px] items-center justify-center rounded-md bg-primary bg-opacity-10 text-primary">
-        {checkIcon}
-      </span>
-      {text}
-    </p>
-  );
+interface ListProps {
+  text: string;
+  url: string;
+}
 
+const List: React.FC<ListProps> = ({ text, url }) => (
+  <a
+    href={url}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="mb-5 flex items-center text-lg font-medium text-body-color hover:text-primary transition-colors duration-200"
+  >
+    <span className="mr-4 flex h-[30px] w-[30px] items-center justify-center rounded-md bg-primary bg-opacity-10 text-primary">
+      {checkIcon}
+    </span>
+    {text}
+  </a>
+);
+
+const AboutSectionManuals: React.FC = () => {
   return (
     <section id="about" className="pt-16 md:pt-20 lg:pt-28">
       <div className="container">
@@ -35,9 +45,14 @@ const AboutSectionManuals = () => {
               >
                 <div className="mx-[-12px] flex flex-wrap">
                   <div className="w-full px-3 sm:w-1/2 lg:w-full xl:w-1/2">
-                    <List text="Recepción de equipos de computo" />
-                    <List text="Diagnóstico en equipos de computo" />
-                    <List text="Baja de equipo de computo" />
+                    <List
+                      text="Formato de Recepcion de Equipos"
+                      url="https://amiable-tapir-788.convex.cloud/api/storage/69c4f69d-158b-4c4c-b5da-2dff0d02dfbd"
+                    />
+                    <List
+                      text="Formato Responsabilidad de Claves"
+                      url="https://amiable-tapir-788.convex.cloud/api/storage/083f544d-d6a7-46a6-b484-8ab366fa59c9"
+                    />
                   </div>
                 </div>
               </div>

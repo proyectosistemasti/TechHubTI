@@ -4,25 +4,25 @@ const menuData: Menu[] = [
   {
     id: 1,
     title: "Inicio",
-    path: "/home",
+    path: "/inicio",
     newTab: false,
   },
   {
     id: 2,
     title: "Manuales ",
-    path: "/manuals",
+    path: "/manuales",
     newTab: false,
   },
   {
     id: 3,
     title: "Formatos ",
-    path: "/formats",
+    path: "/formatos",
     newTab: false,
   },
   {
     id: 4,
     title: "Contacto ",
-    path: "/contac",
+    path: "/contacto",
     newTab: false,
   },
 

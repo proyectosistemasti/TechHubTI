@@ -40,6 +40,7 @@ export default function ShortcutsPage() {
 
   return (
     <div className="p-4">
+      <h1 className="text-4xl font-bold">Shortcuts</h1>
       {/* Componente para gestionar y mostrar accesos directos */}
       <ShortcutComponent shortcuts={shortcuts} />
     </div>

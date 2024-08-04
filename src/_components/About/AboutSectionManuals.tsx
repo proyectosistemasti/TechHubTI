@@ -25,7 +25,7 @@ const AboutSectionManuals = () => {
             <div className="w-full px-4 lg:w-1/2">
               <SectionTitle
                 title="Manuales para configuración y descargas de Apps de HXA"
-                paragraph="Para la descarga de ciertos manuales solo le damos click en el apartado donde se encuentran los archivos, en esta sección pueden encontrar los siguientes archivos:"
+                paragraph="Para descargar los manuales, haga clic en el apartado correspondiente. En esta sección puede encontrar los siguientes archivos:"
                 mb="44px"
               />
 
@@ -35,13 +35,7 @@ const AboutSectionManuals = () => {
               >
                 <div className="mx-[-12px] flex flex-wrap">
                   <div className="w-full px-3 sm:w-1/2 lg:w-full xl:w-1/2">
-                    <List text="Descarga e instalación de Succes Factor" />
-                    <List text="Configuración de Outlook" />
-                    <List text="Cómo subir un ticket" />
-                  </div>
-
-                  <div className="w-full px-3 sm:w-1/2 lg:w-full xl:w-1/2">
-                    <List text="Configuración de Service Now" />
+                    <List text="Manual de configuración de Outlook, SuccessFactor." />
                   </div>
                 </div>
               </div>
