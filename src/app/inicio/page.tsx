@@ -11,7 +11,7 @@ import { Providers } from "../provider";
 import ScheduleImage from "@/_components/Schedule/schedule";
 import ConvexClientProvider from "../ConvexClientProvider";
 import Contactos from "@/_components/Contactos"; // const inter = Inter({ subsets: ["latin"] });
-
+import AccesosDirectos from "@/_components/Accesos";
 export default function Home() {
   return (
     <ConvexClientProvider>
@@ -25,6 +25,7 @@ export default function Home() {
         <AboutSectionManuals />
         <AboutSectionFormats />
         <Contactos/>
+        <AccesosDirectos/>	
         <Footer />
       </Providers>
     </ConvexClientProvider>
