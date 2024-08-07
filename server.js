@@ -16,8 +16,8 @@ app.prepare().then(() => {
   });
 
   // Escucha en el puerto 3000
-  server.listen(3000, (err) => {
+  server.listen(82, (err) => {
     if (err) throw err;
-    console.log('> Ready on http://localhost:3000');
+    console.log('> Ready on http://localhost:82');
   });
 });
