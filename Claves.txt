@@ -1,4 +1,23 @@
 correo: proyectosistemasti@gmail.com
 password: SistemasTI2024
 
+#Clerk (tercero que realiza gestión de usuarios y características de la organizacion)
+https://clerk.com/
 
+#Convex (base de datos no relacional que almacena la informacion)
+https://dashboard.convex.dev/
+
+
+#instalar Node js y pm2
+#nodejs desde su sitio y posteriormente copiar y pegar esto en cmd
+npm install -g pm2
+
+
+# estos pasos en la raiz del proyecto
+pm2 start server.js --name "techhubti"
+pm2 save
+npm install -g pm2-windows-startup
+pm2-startup install
+
+
+pm2 list
