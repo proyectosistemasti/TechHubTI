@@ -5,9 +5,10 @@
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
-    "start": "next start",
+    "start": "node server.js",
     "lint": "next lint"
-  },
+  }
+  ,
   "dependencies": {
     "@clerk/clerk-react": "^5.2.4",
     "@clerk/clerk-sdk-node": "^5.0.12",
